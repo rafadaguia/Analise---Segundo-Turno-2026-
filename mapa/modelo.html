@@ -1,0 +1,459 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Focos do 2º Turno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: mapa de campo à esquerda, ficha do município e lista à direita; resumo em faixa no topo. */
+:root {
+  --bg: #f6f7f4;
+  --surface: #fcfcfb;
+  --land: #e7eae3;
+  --land-line: #c9cec4;
+  --ink: #141a17;
+  --ink-2: #4c534e;
+  --ink-3: #737a74;
+  --rule: #dde1d9;
+  --chip: #edf0ea;
+  --focus: #2a78d6;
+  --act-reconquistar: #2a78d6;
+  --act-mobilizar: #eb6834;
+  --act-ambas: #1baf7a;
+  --ring: #141a17;
+  --neg: #b8322f;
+  --pos: #1f7a4d;
+  --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121513; --surface: #1a1d1b; --land: #232825; --land-line: #3a413c;
+    --ink: #f1f3ef; --ink-2: #c1c7c0; --ink-3: #8f978f; --rule: #2c322e; --chip: #262b27;
+    --focus: #6da7ec;
+    --act-reconquistar: #3987e5; --act-mobilizar: #d95926; --act-ambas: #199e70;
+    --ring: #f1f3ef; --neg: #f07a76; --pos: #5cc48f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121513; --surface: #1a1d1b; --land: #232825; --land-line: #3a413c;
+  --ink: #f1f3ef; --ink-2: #c1c7c0; --ink-3: #8f978f; --rule: #2c322e; --chip: #262b27;
+  --focus: #6da7ec;
+  --act-reconquistar: #3987e5; --act-mobilizar: #d95926; --act-ambas: #199e70;
+  --ring: #f1f3ef; --neg: #f07a76; --pos: #5cc48f;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: clamp(16px, 3vw, 32px); padding-block: 28px 48px; display: grid; gap: 24px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* cabeçalho */
+header { display: grid; gap: 14px; }
+.eyebrow { font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font-family: var(--display); font-stretch: 68%; font-weight: 800; font-size: clamp(38px, 6vw, 64px); line-height: .95; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.lede { max-width: 68ch; margin: 0; color: var(--ink-2); font-size: 16px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px 36px; padding-top: 6px; border-top: 1px solid var(--rule); }
+.stat { display: grid; gap: 0; min-width: 0; }
+.stat b { font-family: var(--display); font-stretch: 75%; font-weight: 700; font-size: 30px; line-height: 1.1; }
+.stat span { font-size: 13px; color: var(--ink-3); }
+
+/* filtros */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 13px/1 var(--body); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 999px; padding: 7px 12px 7px 10px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.chip[aria-pressed="false"] { background: transparent; border-color: var(--rule); color: var(--ink-3); }
+.chip[aria-pressed="false"] .dot { opacity: .35; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.dot.reconquistar { background: var(--act-reconquistar); }
+.dot.mobilizar { background: var(--act-mobilizar); }
+.dot.ambas { background: var(--act-ambas); }
+select, input[type="search"] { font: 14px var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; }
+label.check { display: inline-flex; gap: 7px; align-items: center; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* grade principal */
+.main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+
+.mapbox { position: relative; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+#map { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1.02; max-width: 100%; touch-action: none; cursor: grab; }
+#map:active { cursor: grabbing; }
+.uf-shape { fill: var(--land); stroke: var(--land-line); stroke-width: .7; vector-effect: non-scaling-stroke; }
+.uf-label { font: 600 10px var(--display); font-stretch: 80%; fill: var(--ink-3); letter-spacing: .06em; pointer-events: none; }
+.city { stroke: var(--surface); cursor: pointer; transition: opacity .15s; }
+.city.dim { opacity: .1; pointer-events: none; }
+.warnring { fill: none; stroke: var(--ring); stroke-dasharray: 2 2; pointer-events: none; }
+.warnring.dim { opacity: 0; }
+.selring { fill: none; stroke: var(--ring); pointer-events: none; }
+.zoom { position: absolute; right: 10px; top: 10px; display: grid; gap: 4px; }
+.zoom button { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); font: 600 16px var(--body); cursor: pointer; }
+.zoom button.wide { width: auto; padding: 0 8px; font-size: 12px; }
+.legend { position: absolute; left: 12px; bottom: 12px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; font-size: 12px; color: var(--ink-2); max-width: calc(100% - 24px); }
+.legend .li { display: flex; align-items: center; gap: 7px; }
+.legend svg { flex: none; }
+@media (max-width: 520px) { .legend { position: static; border: 0; border-top: 1px solid var(--rule); border-radius: 0; } }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); border-radius: 6px; padding: 7px 10px; font-size: 12.5px; line-height: 1.35; max-width: 240px; transform: translate(-50%, calc(-100% - 12px)); }
+.tip b { font-weight: 600; }
+
+/* painel */
+.panel { display: grid; gap: 16px; min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.card-head { display: grid; gap: 6px; }
+.card-head .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; color: var(--ink-3); }
+.card h2 { font-family: var(--display); font-stretch: 72%; font-weight: 800; font-size: 34px; line-height: 1; margin: 0; text-wrap: balance; }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 3px 9px 3px 7px; border-radius: 999px; background: var(--chip); color: var(--ink); }
+.tag.plain { font-weight: 500; color: var(--ink-2); }
+.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 10px; }
+.fig { display: grid; min-width: 0; }
+.fig b { font-family: var(--display); font-stretch: 80%; font-weight: 700; font-size: 21px; line-height: 1.15; }
+.fig span { font-size: 12px; color: var(--ink-3); }
+.neg { color: var(--neg); } .pos { color: var(--pos); }
+.todo { display: grid; gap: 8px; }
+.todo h3 { font-family: var(--display); font-stretch: 85%; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0; }
+.todo p { margin: 0; font-size: 14.5px; max-width: 62ch; }
+.todo p.alert { border-left: 3px solid var(--neg); padding-left: 10px; color: var(--ink-2); }
+.potbar { display: grid; gap: 6px; }
+.potbar .bar { display: flex; gap: 2px; height: 12px; }
+.potbar .seg { height: 100%; }
+.potbar .seg:first-child { border-radius: 4px 0 0 4px; }
+.potbar .seg:last-child { border-radius: 0 4px 4px 0; }
+.potbar .seg:only-child { border-radius: 4px; }
+.potbar .keys { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+.potbar .keys span { display: inline-flex; align-items: center; gap: 6px; }
+
+.listcard { padding: 0; gap: 0; }
+.listhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
+.listhead input { flex: 1 1 160px; min-width: 0; }
+.count { font-size: 12.5px; color: var(--ink-3); }
+.list { max-height: 440px; overflow-y: auto; }
+.row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--rule); cursor: pointer; background: none; border-left: 0; border-right: 0; border-top: 0; width: 100%; text-align: left; font: inherit; color: inherit; }
+.row:hover { background: var(--chip); }
+.row[aria-current="true"] { background: var(--chip); box-shadow: inset 3px 0 0 var(--ink); }
+.row .rk { font-size: 12px; color: var(--ink-3); }
+.row .nm { min-width: 0; display: grid; }
+.row .nm b { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .nm small { font-size: 12px; color: var(--ink-3); display: flex; gap: 6px; align-items: center; }
+.row .pt { font-size: 13px; font-weight: 600; text-align: right; }
+.row .pt small { display: block; font-weight: 400; font-size: 11px; color: var(--ink-3); }
+.empty { padding: 18px 14px; color: var(--ink-3); font-size: 14px; }
+
+/* método */
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px 32px; border-top: 1px solid var(--rule); padding-top: 20px; }
+.notes h2 { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 22px; margin: 0 0 6px; }
+.notes p, .notes li { font-size: 14px; color: var(--ink-2); max-width: 65ch; }
+.notes ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.notes dl { margin: 0; display: grid; gap: 8px; }
+.notes dt { font-weight: 600; font-size: 14px; display: flex; gap: 7px; align-items: center; }
+.notes dd { margin: 0; font-size: 14px; color: var(--ink-2); }
+.foot { font-size: 12.5px; color: var(--ink-3); }
+
+@media (prefers-reduced-motion: reduce) { .city { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Eleição presidencial 2026 · 2º turno · estimativa por município</div>
+    <h1>Focos do 2º turno</h1>
+    <p class="lede">Os 200 municípios onde a análise do 1º turno encontra mais votos recuperáveis para Lula. Para cada um, o mapa mostra o que os dados indicam: reconquistar o terreno perdido desde 2022, levar mais eleitores às urnas, ou as duas coisas. São estimativas de um modelo, não previsões de resultado.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filtros">
+    <div class="chips" id="actchips"></div>
+    <select id="frente" aria-label="Frente"><option value="">Todas as frentes</option></select>
+    <label class="check"><input type="checkbox" id="soprej"> Só onde mobilizar prejudica</label>
+  </div>
+
+  <div class="main">
+    <div class="mapbox">
+      <svg id="map" role="img" aria-label="Mapa do Brasil com os 200 municípios prioritários"></svg>
+      <div class="zoom">
+        <button id="zin" aria-label="Aproximar">+</button>
+        <button id="zout" aria-label="Afastar">−</button>
+        <button id="zreset" class="wide" aria-label="Ver o Brasil inteiro">Brasil</button>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+
+    <div class="panel">
+      <article class="card" id="card" aria-live="polite"></article>
+      <section class="card listcard" aria-label="Lista dos municípios">
+        <div class="listhead">
+          <input type="search" id="busca" placeholder="Buscar município" aria-label="Buscar município">
+          <span class="count num" id="count"></span>
+        </div>
+        <div class="list" id="list"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="notes">
+    <div>
+      <h2>Como ler</h2>
+      <dl>
+        <dt><span class="dot reconquistar"></span>Reconquistar</dt>
+        <dd>Lula caiu mais aqui do que a média do país desde o 2º turno de 2022. Pelo menos 60% do potencial vem de voltar a essa média, o que é trabalho de persuasão.</dd>
+        <dt><span class="dot mobilizar"></span>Mobilizar</dt>
+        <dd>Pelo menos 60% do potencial vem de aumentar o comparecimento. Nesta faixa de votação, quem voltou às urnas no 2º turno de 2022 votou majoritariamente em Lula.</dd>
+        <dt><span class="dot ambas"></span>As duas</dt>
+        <dd>O potencial se divide entre as duas frentes.</dd>
+        <dt><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-dasharray="2 2"></circle></svg>Anel tracejado</dt>
+        <dd>Mobilizar prejudica. Nas faixas em que Lula tem menos de 35% ou entre 45% e 55%, a maior parte de quem voltou às urnas em 2022 votou no adversário.</dd>
+      </dl>
+    </div>
+    <div>
+      <h2>Como o potencial é calculado</h2>
+      <p><b>Terreno perdido:</b> votos que Lula teria se o município tivesse caído exatamente a média nacional (<span class="num" id="nacdesloc"></span> pontos entre o 2º turno de 2022 e o 1º de 2026). Só conta onde a queda foi maior que a média.</p>
+      <p><b>Mobilização:</b> saldo líquido de 2 pontos percentuais a mais de comparecimento, aplicando a cada município a fração de 2022 da sua faixa de votação. Só conta onde o saldo é positivo.</p>
+      <p>Os 200 focos são os primeiros do ranking pela soma das duas parcelas, o mesmo corte do notebook da análise.</p>
+    </div>
+    <div>
+      <h2>O que isto não diz</h2>
+      <ol>
+        <li>Os dados são por município, não por eleitor. Não dizem quem mudou de voto nem por quê.</li>
+        <li>As taxas de transferência vêm de 2022, quando a terceira via apoiou Lula no 2º turno. Em 2026 ela está à direita dele, então os números são um teto.</li>
+        <li>A faixa de 45% a 55%, onde quem voltou às urnas votou no adversário, é o resultado menos sólido da análise e pede checagem.</li>
+        <li>Não há pesquisa de intenção de voto aqui. Quando houver, ela pesa mais que este modelo.</li>
+        <li>Os dados de 2026 são de coleta própria no site de resultados do TSE. Os arquivos oficiais de dados abertos ainda não saíram.</li>
+      </ol>
+    </div>
+  </section>
+  <p class="foot">Fontes: TSE (1º turno de 2026; 2018 e 2022), IBGE (Censo 2022, malha estadual). Posição dos pontos: sede do município. Análise e código no repositório Analise---Segundo-Turno-2026-.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const DADOS = /*__DADOS__*/null;
+const { meta, cidades } = DADOS;
+
+const ACOES = {
+  reconquistar: { rotulo: "Reconquistar", cor: "--act-reconquistar" },
+  mobilizar: { rotulo: "Mobilizar", cor: "--act-mobilizar" },
+  ambas: { rotulo: "As duas", cor: "--act-ambas" },
+};
+const fmt = n => Math.round(n).toLocaleString("pt-BR");
+const fmt1 = n => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const sinal = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt1(Math.abs(n));
+const milhoes = n => (n / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + " mi";
+const mil = n => n >= 1e6 ? milhoes(n) : Math.round(n / 1000).toLocaleString("pt-BR") + " mil";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- resumo ---------- */
+document.getElementById("nacdesloc").textContent = sinal(meta.nac_desloc);
+document.getElementById("stats").innerHTML = [
+  [fmt(meta.foco), `de ${fmt(meta.municipios_pais)} municípios`],
+  [Math.round(100 * meta.aptos_foco / meta.aptos_pais) + "%", "do eleitorado do país"],
+  [mil(meta.pot_foco), "votos líquidos de potencial"],
+  [Math.round(100 * meta.pot_foco / meta.gap) + "%", `da diferença de ${milhoes(meta.gap)} para Flávio Bolsonaro`],
+].map(([b, s]) => `<div class="stat"><b class="num">${b}</b><span>${s}</span></div>`).join("");
+
+/* ---------- estado ---------- */
+const estado = { acoes: new Set(Object.keys(ACOES)), frente: "", soPrej: false, busca: "", sel: cidades[0].rank };
+const visivel = c => estado.acoes.has(c.acao) && (!estado.frente || c.frente === estado.frente) && (!estado.soPrej || c.mob_prejudica);
+
+/* ---------- filtros ---------- */
+const chipsEl = document.getElementById("actchips");
+for (const [k, a] of Object.entries(ACOES)) {
+  const n = cidades.filter(c => c.acao === k).length;
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button"; b.setAttribute("aria-pressed", "true");
+  b.innerHTML = `<span class="dot ${k}"></span>${a.rotulo} <span class="num" style="color:var(--ink-3)">${n}</span>`;
+  b.onclick = () => {
+    if (estado.acoes.has(k) && estado.acoes.size > 1) estado.acoes.delete(k); else estado.acoes.add(k);
+    for (const el of chipsEl.children) el.setAttribute("aria-pressed", estado.acoes.has(el.dataset.k) ? "true" : "false");
+    atualizar();
+  };
+  b.dataset.k = k;
+  chipsEl.appendChild(b);
+}
+const frenteSel = document.getElementById("frente");
+const frentes = d3.rollups(cidades, v => d3.sum(v, c => c.pot), c => c.frente).sort((a, b) => b[1] - a[1]);
+for (const [f, p] of frentes) {
+  const o = document.createElement("option");
+  o.value = f; o.textContent = `${f} · ${mil(p)} votos`;
+  frenteSel.appendChild(o);
+}
+frenteSel.onchange = () => { estado.frente = frenteSel.value; atualizar(true); };
+document.getElementById("soprej").onchange = e => { estado.soPrej = e.target.checked; atualizar(); };
+document.getElementById("busca").oninput = e => { estado.busca = e.target.value; desenharLista(); };
+
+/* ---------- mapa ---------- */
+const W = 800, H = 816;
+const svg = d3.select("#map").attr("viewBox", `0 0 ${W} ${H}`);
+const ufs = DADOS.ufs;
+// a malha do IBGE vem no sentido anti-horário; o d3 espera o horário
+for (const f of ufs.features) {
+  if (d3.geoArea(f) > 2 * Math.PI) {
+    const g = f.geometry;
+    if (g.type === "Polygon") g.coordinates.forEach(r => r.reverse());
+    else g.coordinates.forEach(p => p.forEach(r => r.reverse()));
+  }
+}
+const SIGLA = { 11:"RO",12:"AC",13:"AM",14:"RR",15:"PA",16:"AP",17:"TO",21:"MA",22:"PI",23:"CE",24:"RN",25:"PB",26:"PE",27:"AL",28:"SE",29:"BA",31:"MG",32:"ES",33:"RJ",35:"SP",41:"PR",42:"SC",43:"RS",50:"MS",51:"MT",52:"GO",53:"DF" };
+const proj = d3.geoMercator().fitExtent([[16, 16], [W - 16, H - 16]], ufs);
+const path = d3.geoPath(proj);
+const g = svg.append("g");
+g.append("g").selectAll("path").data(ufs.features).join("path").attr("class", "uf-shape").attr("d", path);
+const pequenas = new Set(["DF", "SE", "AL", "RN", "PB", "ES", "RJ"]);
+const ufLabels = g.append("g").selectAll("text")
+  .data(ufs.features.filter(f => !pequenas.has(SIGLA[f.properties.codarea])))
+  .join("text").attr("class", "uf-label").attr("text-anchor", "middle")
+  .attr("transform", f => `translate(${path.centroid(f)})`).text(f => SIGLA[f.properties.codarea]);
+
+const r = d3.scaleSqrt().domain([0, d3.max(cidades, c => c.pot)]).range([0, 25]);
+const rr = c => Math.max(2.6, r(c.pot));
+for (const c of cidades) [c.x, c.y] = proj([c.lon, c.lat]);
+const ordem = [...cidades].sort((a, b) => b.pot - a.pot);   // grandes embaixo
+const cor = c => `var(${ACOES[c.acao].cor})`;
+
+const gC = g.append("g");
+const circ = gC.selectAll("circle.city").data(ordem, c => c.rank).join("circle")
+  .attr("class", "city").attr("cx", c => c.x).attr("cy", c => c.y).attr("fill", cor);
+const rings = gC.selectAll("circle.warnring").data(ordem.filter(c => c.mob_prejudica), c => c.rank).join("circle")
+  .attr("class", "warnring").attr("cx", c => c.x).attr("cy", c => c.y);
+const selRing = g.append("circle").attr("class", "selring");
+
+let k = 1;
+function escala() {
+  const s = 1 / Math.sqrt(k);
+  circ.attr("r", c => rr(c) * s).attr("stroke-width", 1.2 / k);
+  rings.attr("r", c => rr(c) * s + 3 / k).attr("stroke-width", 1.1 / k).attr("stroke-dasharray", `${2.2 / k} ${2.2 / k}`);
+  ufLabels.attr("font-size", 10 / k).style("opacity", k > 5 ? 0 : 1);
+  const c = cidades.find(c => c.rank === estado.sel);
+  selRing.attr("cx", c.x).attr("cy", c.y).attr("r", rr(c) * s + 6 / k).attr("stroke-width", 2 / k);
+}
+const zoom = d3.zoom().scaleExtent([1, 24]).translateExtent([[0, 0], [W, H]])
+  .on("zoom", e => { k = e.transform.k; g.attr("transform", e.transform); escala(); });
+svg.call(zoom).on("dblclick.zoom", null);
+const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const anim = sel => reduz ? sel : sel.transition().duration(650);
+document.getElementById("zin").onclick = () => anim(svg).call(zoom.scaleBy, 1.8);
+document.getElementById("zout").onclick = () => anim(svg).call(zoom.scaleBy, 1 / 1.8);
+document.getElementById("zreset").onclick = () => anim(svg).call(zoom.transform, d3.zoomIdentity);
+function focar(c, kz = 7) {
+  anim(svg).call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(kz).translate(-c.x, -c.y));
+}
+function enquadrar(lista) {
+  if (!lista.length) return;
+  const [x0, x1] = d3.extent(lista, c => c.x), [y0, y1] = d3.extent(lista, c => c.y);
+  const kz = Math.min(12, 0.8 / Math.max((x1 - x0 + 40) / W, (y1 - y0 + 40) / H));
+  anim(svg).call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(kz).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
+}
+
+/* tooltip */
+const tip = document.getElementById("tip"), box = document.querySelector(".mapbox");
+circ.on("pointerenter pointermove", (e, c) => {
+  const b = box.getBoundingClientRect();
+  tip.hidden = false;
+  tip.style.left = Math.min(Math.max(e.clientX - b.left, 120), b.width - 120) + "px";
+  tip.style.top = (e.clientY - b.top) + "px";
+  tip.innerHTML = `<b>${esc(c.nome)} (${c.uf})</b> · nº ${c.rank}<br>${ACOES[c.acao].rotulo}${c.mob_prejudica ? " · mobilizar prejudica" : ""}<br><span class="num">${fmt(c.pot)}</span> votos de potencial`;
+}).on("pointerleave", () => { tip.hidden = true; })
+  .on("click", (e, c) => { selecionar(c.rank); });
+
+/* legenda */
+const maxPot = d3.max(cidades, c => c.pot);
+document.getElementById("legend").innerHTML =
+  Object.entries(ACOES).map(([kk, a]) => `<div class="li"><span class="dot ${kk}"></span>${a.rotulo}</div>`).join("") +
+  `<div class="li"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></svg>mobilizar prejudica</div>` +
+  `<div class="li">tamanho = votos de potencial (maior: ${mil(maxPot)})</div>`;
+
+/* ---------- ficha ---------- */
+const FAIXA = { "<35%": "menos de 35%", "35-45%": "entre 35% e 45%", "45-55%": "entre 45% e 55%", "55-65%": "entre 55% e 65%", ">65%": "mais de 65%" };
+function textoAcao(c) {
+  const p = [];
+  const fx = FAIXA[c.faixa];
+  const verbo = c.desloc < 0 ? `Lula caiu ${fmt1(Math.abs(c.desloc))} pontos` : `Lula subiu ${fmt1(c.desloc)} pontos`;
+  const bpct = Math.round(c.b * 100);
+  const acima = c.anomalia < 0;
+  const reconq = acima
+    ? `${verbo} desde o 2º turno de 2022, ${fmt1(Math.abs(c.anomalia))} a mais que a queda média do país. Se a queda aqui tivesse ficado na média, Lula teria cerca de <b class="num">${fmt(c.terreno)}</b> votos a mais. O trabalho é de persuasão: reaproximar o eleitorado que votou nele em 2022.`
+    : `${verbo} desde 2022, um resultado melhor que a média do país. Não há terreno perdido acima da média para recuperar.`;
+  const mob = `${fmt(c.abst)} eleitores (${fmt1(c.abst_pct)}%) não votaram no 1º turno. Onde Lula tem ${fx} dos votos, ${bpct}% de quem voltou às urnas no 2º turno de 2022 votou nele. Com 2 pontos a mais de comparecimento, o saldo líquido estimado é de <b class="num">${fmt(c.mob)}</b> votos.`;
+
+  if (c.acao === "reconquistar") {
+    p.push(`<p><b>Reconquistar o terreno perdido.</b> ${reconq}</p>`);
+    if (c.mob > 0) p.push(`<p>Mobilizar ajuda, mas pesa menos: 2 pontos a mais de comparecimento renderiam cerca de <b class="num">${fmt(c.mob)}</b> votos líquidos.</p>`);
+  } else if (c.acao === "mobilizar") {
+    p.push(`<p><b>Levar eleitores às urnas.</b> ${mob}</p>`);
+    if (c.terreno > 0) p.push(`<p>Há também <b class="num">${fmt(c.terreno)}</b> votos de terreno perdido acima da média.</p>`);
+  } else {
+    p.push(`<p><b>Reconquistar e mobilizar.</b> ${reconq}</p><p>${mob}</p>`);
+  }
+  if (c.mob_prejudica) {
+    p.push(`<p class="alert"><b>Evitar campanha ampla de comparecimento.</b> Onde Lula tem ${fx} dos votos, só ${bpct}% de quem voltou às urnas em 2022 votou nele. Levar mais gente à urna tende a somar votos ao adversário.${c.faixa === "45-55%" ? " É o resultado menos sólido da análise e pede checagem antes de virar decisão." : ""}</p>`);
+  }
+  return p.join("");
+}
+
+function desenharFicha() {
+  const c = cidades.find(c => c.rank === estado.sel);
+  const t = c.terreno, m = c.mob, tot = t + m || 1;
+  const segs = [
+    t > 0 ? `<div class="seg" style="width:${100 * t / tot}%;background:var(--act-reconquistar)"></div>` : "",
+    m > 0 ? `<div class="seg" style="width:${100 * m / tot}%;background:var(--act-mobilizar)"></div>` : "",
+  ].join("");
+  document.getElementById("card").innerHTML = `
+    <div class="card-head">
+      <div class="meta"><span class="num">nº ${c.rank} de ${meta.foco}</span>·<span>${esc(c.frente)}</span></div>
+      <h2>${esc(c.nome)} <span style="color:var(--ink-3);font-weight:600">${c.uf}</span></h2>
+      <div class="meta"><span class="tag"><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo}</span>${c.mob_prejudica ? '<span class="tag plain">mobilizar prejudica</span>' : ""}</div>
+    </div>
+    <div class="figs">
+      <div class="fig"><b class="num">${fmt1(c.lula)}%</b><span>Lula, 1º turno 2026</span></div>
+      <div class="fig"><b class="num">${fmt1(c.lula22)}%</b><span>Lula, 2º turno 2022</span></div>
+      <div class="fig"><b class="num ${c.anomalia < 0 ? "neg" : "pos"}">${sinal(c.desloc)} pp</b><span>variação (país: ${sinal(meta.nac_desloc)})</span></div>
+      <div class="fig"><b class="num ${c.saldo < 0 ? "neg" : "pos"}">${c.saldo > 0 ? "+" : c.saldo < 0 ? "−" : ""}${fmt(Math.abs(c.saldo))}</b><span>Lula menos Flávio, em votos</span></div>
+      <div class="fig"><b class="num">${fmt(c.aptos)}</b><span>eleitores aptos</span></div>
+      <div class="fig"><b class="num">${fmt1(c.abst_pct)}%</b><span>abstenção no 1º turno</span></div>
+    </div>
+    <div class="potbar">
+      <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px"><span>Potencial estimado</span><b class="num">${fmt(c.pot)} votos</b></div>
+      <div class="bar" role="img" aria-label="Terreno perdido ${fmt(t)} votos, mobilização ${fmt(m)} votos">${segs}</div>
+      <div class="keys"><span><span class="dot reconquistar"></span>terreno perdido <b class="num">${fmt(t)}</b></span><span><span class="dot mobilizar"></span>mobilização (+2 pp) <b class="num">${fmt(m)}</b></span></div>
+    </div>
+    <div class="todo"><h3>O que os dados indicam</h3>${textoAcao(c)}</div>`;
+}
+
+/* ---------- lista ---------- */
+const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function desenharLista() {
+  const q = norm(estado.busca.trim());
+  const L = cidades.filter(c => visivel(c) && (!q || norm(c.nome).includes(q)));
+  document.getElementById("count").textContent = `${L.length} de ${meta.foco}`;
+  const el = document.getElementById("list");
+  el.innerHTML = L.length ? L.map(c => `
+    <button class="row" type="button" data-rank="${c.rank}" aria-current="${c.rank === estado.sel}">
+      <span class="rk num">${c.rank}</span>
+      <span class="nm"><b>${esc(c.nome)} · ${c.uf}</b><small><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo}${c.mob_prejudica ? " · mobilizar prejudica" : ""}</small></span>
+      <span class="pt num">${fmt(c.pot)}<small>votos</small></span>
+    </button>`).join("") : `<div class="empty">Nenhum município com esses filtros.</div>`;
+}
+document.getElementById("list").addEventListener("click", e => {
+  const b = e.target.closest(".row"); if (!b) return;
+  const c = cidades.find(c => c.rank === +b.dataset.rank);
+  selecionar(c.rank); focar(c);
+});
+
+function selecionar(rank) {
+  estado.sel = rank;
+  desenharFicha();
+  for (const b of document.querySelectorAll(".row")) b.setAttribute("aria-current", +b.dataset.rank === rank ? "true" : "false");
+  escala();
+}
+
+function atualizar(enq = false) {
+  circ.classed("dim", c => !visivel(c));
+  rings.classed("dim", c => !visivel(c));
+  desenharLista();
+  if (enq) enquadrar(cidades.filter(visivel));
+  if (estado.frente === "" && enq) anim(svg).call(zoom.transform, d3.zoomIdentity);
+}
+
+atualizar();
+selecionar(estado.sel);
+</script>

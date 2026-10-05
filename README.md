@@ -17,6 +17,9 @@ Análise por município do 2º turno da eleição presidencial de 2026. Usa o 1�
 | `dados/detalhe_votacao_munzona_2022.zip` | Comparecimento, brancos e nulos de 2022 (TSE) |
 | `dados/baixar_fontes.sh` | Baixa os arquivos brutos do TSE que não cabem no repositório |
 | `requirements.txt` | Versões das bibliotecas usadas |
+| `mapa/` | Mapa interativo dos 200 municípios prioritários: `construir_mapa.py` gera a página a partir de `modelo.html` |
+| `docs/index.html` | Cópia do mapa servida pelo GitHub Pages: https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/ |
+| `dados/geo/` | Contornos estaduais (IBGE) e coordenadas das sedes municipais ([kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros)) |
 
 ## Como reproduzir
 
