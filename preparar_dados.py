@@ -3,7 +3,7 @@
 
 Junta, por município (código IBGE):
 
-  2026 1º turno   nossa coleta do TSE (dados-tse-2026-1T)
+  2026 1º turno   nossa coleta do TSE (dados-tse-2026-1T), copiada em dados/tse2026
   2022 1º e 2º    TSE, votacao_candidato_munzona_2022_BR.csv
   2018 1º e 2º    TSE, votacao_candidato_munzona_2018_BR.csv
   Censo 2022      IBGE: renda, alfabetização, população
@@ -18,7 +18,7 @@ import pandas as pd
 RAIZ   = os.path.dirname(os.path.abspath(__file__))
 DADOS  = os.path.join(RAIZ, "dados")
 PAINEL = os.path.join(RAIZ, "painel")
-CSV26  = os.path.abspath(os.path.join(RAIZ, "..", "dados-tse-2026-1T", "csv"))
+CSV26  = os.path.join(DADOS, "tse2026")   # recorte de presidente/município da coleta dados-tse-2026-1T
 
 LULA, BOLSO = "13", "22"
 
