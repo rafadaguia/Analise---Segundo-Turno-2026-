@@ -1,0 +1,21 @@
+lendo 2026 ...
+  5571 municípios | 3º colocado nacional: nº 
+lendo 2022 ...
+  5751 municípios
+lendo 2018 ...
+  5708 municípios
+lendo IBGE ...
+Traceback (most recent call last):
+  File "/Users/ai3/Projetos/apuracao/analise-2t/preparar_dados.py", line 182, in <module>
+    sys.exit(main())
+  File "/Users/ai3/Projetos/apuracao/analise-2t/preparar_dados.py", line 167, in main
+    base = base.merge(social, on="cd_municipio_ibge", how="left")
+  File "/Users/ai3/Library/Python/3.9/lib/python/site-packages/pandas/core/frame.py", line 10859, in merge
+    return merge(
+  File "/Users/ai3/Library/Python/3.9/lib/python/site-packages/pandas/core/reshape/merge.py", line 170, in merge
+    op = _MergeOperation(
+  File "/Users/ai3/Library/Python/3.9/lib/python/site-packages/pandas/core/reshape/merge.py", line 807, in __init__
+    self._maybe_coerce_merge_keys()
+  File "/Users/ai3/Library/Python/3.9/lib/python/site-packages/pandas/core/reshape/merge.py", line 1509, in _maybe_coerce_merge_keys
+    raise ValueError(msg)
+ValueError: You are trying to merge on int64 and object columns for key 'cd_municipio_ibge'. If you wish to proceed you should use pd.concat

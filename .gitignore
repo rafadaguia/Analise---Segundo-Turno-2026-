@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+*.parcial
+# Brutos do TSE (>100 MB, acima do limite do GitHub). Baixe com dados/baixar_fontes.sh
+dados/votacao_candidato_munzona_2022.zip
+dados/votacao_candidato_munzona_2018.zip
+dados/perfil_eleitorado_2026.zip
