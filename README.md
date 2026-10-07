@@ -23,7 +23,7 @@ Análise por município do 2º turno da eleição presidencial de 2026. Usa o 1�
 | `requirements.txt` | Versões das bibliotecas usadas (etapas 1, 2 e 5) |
 | `requirements-ei.txt` | Ambiente das etapas 3 e 4 (Python 3.12, PyMC, nutpie) |
 | `mapa/` | Mapa interativo dos 200 municípios prioritários: `construir_mapa.py` gera a página a partir de `modelo.html` |
-| `docs/index.html` | Cópia do mapa servida pelo GitHub Pages: https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/ |
+| `docs/` | Site do GitHub Pages: índice em https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/, mapa completo em `/mapa/` e mapa para matérias em `/embed/` |
 | `dados/geo/` | Contornos estaduais (IBGE) e coordenadas das sedes municipais ([kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros)) |
 
 ## Como reproduzir
@@ -84,3 +84,23 @@ O TSE ainda não publicou os arquivos de dados abertos do 1º turno de 2026. Os 
 - IBGE, SIDRA: https://sidra.ibge.gov.br
 
 Todos os dados são públicos. Os painéis são agregados por município. Os arquivos de `dados/tse2026/` trazem os dados públicos de registro dos candidatos, como o TSE os publica.
+
+## Mapa para matérias (iframe)
+
+O mapa compacto fica em https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/embed/ . Para incorporar numa notícia, cole no bloco de HTML:
+
+```html
+<figure style="margin:0">
+  <iframe id="focos2t" src="https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/embed/"
+    title="Onde Lula tem mais votos a recuperar no 2º turno" loading="lazy" scrolling="no"
+    style="width:100%;border:0;height:1100px;display:block"></iframe>
+</figure>
+<script>
+  window.addEventListener("message", function (e) {
+    if (e.origin !== "https://rafadaguia.github.io" || !e.data || e.data.tipo !== "focos2t-altura") return;
+    document.getElementById("focos2t").style.height = e.data.altura + "px";
+  });
+</script>
+```
+
+O script ajusta a altura do iframe ao conteúdo. Sem ele, o mapa funciona com altura fixa de 1.100 pixels. A página inicial do site tem o mesmo código com um botão de copiar.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera mapa/mapa_prioridades.html (e a cópia docs/index.html, servida pelo GitHub Pages): os 200 municípios prioritários e a ação indicada em cada um.
+"""Gera mapa/mapa_prioridades.html, mapa/embed.html e o site do GitHub Pages (docs/): os 200 municípios prioritários e a ação indicada em cada um.
 
 Lê painel/focos_ei.csv e painel/cenarios_frentes.csv (simulacao_montecarlo.py), painel/painel_final.csv, os contornos estaduais do IBGE
 (dados/geo/ibge_ufs_qualidade_minima.json) e as coordenadas das sedes municipais
@@ -90,20 +90,22 @@ def main():
     open(saida, "w", encoding="utf-8").write(pagina)
     print(f"{len(cidades)} municípios -> {saida}")
 
-    # cópia para o GitHub Pages (pasta docs/), como documento completo
-    pages = os.path.join(RAIZ, "docs", "index.html")
-    os.makedirs(os.path.dirname(pages), exist_ok=True)
-    open(pages, "w", encoding="utf-8").write('<!doctype html>\n<html lang="pt-BR">\n' + pagina + "\n</html>\n")
-    open(os.path.join(RAIZ, "docs", ".nojekyll"), "w").close()
-    print(f"GitHub Pages -> {pages}")
-
     # versão compacta para incorporar em matérias (iframe): mesmos dados, sem a lista de frentes
     leve = json.dumps({"meta": meta, "cidades": cidades, "ufs": ufs}, ensure_ascii=False, separators=(",", ":"))
     emb = open(os.path.join(RAIZ, "mapa", "embed_modelo.html"), encoding="utf-8").read().replace("/*__DADOS__*/null", leve)
     open(os.path.join(RAIZ, "mapa", "embed.html"), "w", encoding="utf-8").write(emb)
-    open(os.path.join(RAIZ, "docs", "embed.html"), "w", encoding="utf-8").write(
-        '<!doctype html>\n<html lang="pt-BR">\n' + emb + "\n</html>\n")
-    print("embed -> mapa/embed.html, docs/embed.html")
+
+    # GitHub Pages (pasta docs/): índice na raiz e um endereço para cada mapa
+    #   /          índice          /mapa/     mapa completo          /embed/    mapa para matérias
+    docs = os.path.join(RAIZ, "docs")
+    doc = lambda html: '<!doctype html>\n<html lang="pt-BR">\n' + html + "\n</html>\n"
+    for sub, html in (("mapa", pagina), ("embed", emb)):
+        os.makedirs(os.path.join(docs, sub), exist_ok=True)
+        open(os.path.join(docs, sub, "index.html"), "w", encoding="utf-8").write(doc(html))
+    indice = open(os.path.join(RAIZ, "mapa", "indice_modelo.html"), encoding="utf-8").read()
+    open(os.path.join(docs, "index.html"), "w", encoding="utf-8").write(indice)
+    open(os.path.join(docs, ".nojekyll"), "w").close()
+    print("GitHub Pages -> docs/index.html, docs/mapa/index.html, docs/embed/index.html")
     print(json.dumps(meta, ensure_ascii=False))
     print(pd.Series([c["acao"] for c in cidades]).value_counts().to_dict(),
           "| mobilizar:", pd.Series([c["mob_veredito"] for c in cidades]).value_counts().to_dict())
