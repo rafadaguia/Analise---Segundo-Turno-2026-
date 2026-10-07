@@ -150,6 +150,26 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
 .notes dd { margin: 0; font-size: 14px; color: var(--ink-2); }
 .foot { font-size: 12.5px; color: var(--ink-3); }
 
+
+/* margem de erro por frente */
+.frentes { display: grid; gap: 10px; }
+.frentes h2 { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 26px; margin: 0; }
+.frentes > p { margin: 0; color: var(--ink-2); max-width: 70ch; font-size: 14.5px; }
+.fchart { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; }
+.fchart svg { display: block; min-width: 560px; width: 100%; height: auto; }
+.fchart text { fill: var(--ink-2); font: 12px var(--body); }
+.fchart .lbl { fill: var(--ink); font-weight: 600; }
+.fchart .grid { stroke: var(--rule); }
+.fchart .iv { stroke-linecap: round; }
+.fchart .row-hit { fill: transparent; cursor: pointer; }
+.fchart .row-hit:hover { fill: var(--chip); }
+.prob { display: grid; gap: 4px; }
+.prob .track { position: relative; height: 8px; border-radius: 4px; background: var(--chip); }
+.prob .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; }
+.prob .mid { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--ink-3); }
+.prob small { font-size: 12px; color: var(--ink-3); }
+.iv-txt { font-size: 12px; color: var(--ink-3); font-weight: 400; }
+
 @media (prefers-reduced-motion: reduce) { .city { transition: none; } }
 </style>
 
@@ -157,7 +177,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
   <header>
     <div class="eyebrow">Eleição presidencial 2026 · 2º turno · estimativa por município</div>
     <h1>Focos do 2º turno</h1>
-    <p class="lede">Os 200 municípios onde a análise do 1º turno encontra mais votos recuperáveis para Lula. Para cada um, o mapa mostra o que os dados indicam: reconquistar o terreno perdido desde 2022, levar mais eleitores às urnas, ou as duas coisas. São estimativas de um modelo, não previsões de resultado.</p>
+    <p class="lede">Os 200 municípios onde a análise do 1º turno encontra mais votos recuperáveis para Lula. Para cada um, o mapa mostra o que os dados indicam e com que margem de erro: reconquistar o terreno perdido desde 2022, levar mais eleitores às urnas, ou as duas coisas. As taxas vêm de inferência ecológica bayesiana sobre 2022 e os intervalos, de 2.000 simulações. São estimativas de um modelo, não previsões de resultado.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -191,6 +211,12 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
     </div>
   </div>
 
+  <section class="frentes" aria-labelledby="tf">
+    <h2 id="tf">Margem de erro por frente</h2>
+    <p>Potencial líquido de votos nos focos de cada frente: o ponto é a mediana das 2.000 simulações, e a barra, o intervalo onde caem 90% delas. Clique numa frente para filtrar o mapa.</p>
+    <div class="fchart" id="fchart"></div>
+  </section>
+
   <section class="notes">
     <div>
       <h2>Como ler</h2>
@@ -198,25 +224,25 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
         <dt><span class="dot reconquistar"></span>Reconquistar</dt>
         <dd>Lula caiu mais aqui do que a média do país desde o 2º turno de 2022. Pelo menos 60% do potencial vem de voltar a essa média, o que é trabalho de persuasão.</dd>
         <dt><span class="dot mobilizar"></span>Mobilizar</dt>
-        <dd>Pelo menos 60% do potencial vem de aumentar o comparecimento. Nesta faixa de votação, quem voltou às urnas no 2º turno de 2022 votou majoritariamente em Lula.</dd>
+        <dd>Pelo menos 60% do potencial vem de aumentar o comparecimento.</dd>
         <dt><span class="dot ambas"></span>As duas</dt>
         <dd>O potencial se divide entre as duas frentes.</dd>
         <dt><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-dasharray="2 2"></circle></svg>Anel tracejado</dt>
-        <dd>Mobilizar prejudica. Nas faixas em que Lula tem menos de 35% ou entre 45% e 55%, a maior parte de quem voltou às urnas em 2022 votou no adversário.</dd>
+        <dd>Mobilizar prejudica: em 90% ou mais das simulações, levar mais gente às urnas dá saldo ao adversário.</dd>
       </dl>
     </div>
     <div>
       <h2>Como o potencial é calculado</h2>
-      <p><b>Terreno perdido:</b> votos que Lula teria se o município tivesse caído exatamente a média nacional (<span class="num" id="nacdesloc"></span> pontos entre o 2º turno de 2022 e o 1º de 2026). Só conta onde a queda foi maior que a média.</p>
-      <p><b>Mobilização:</b> saldo líquido de 2 pontos percentuais a mais de comparecimento, aplicando a cada município a fração de 2022 da sua faixa de votação. Só conta onde o saldo é positivo.</p>
-      <p>Os 200 focos são os primeiros do ranking pela soma das duas parcelas, o mesmo corte do notebook da análise.</p>
+      <p><b>Terreno perdido:</b> votos que Lula teria se o município tivesse caído exatamente a média nacional (<span class="num" id="nacdesloc"></span> pontos entre o 2º turno de 2022 e o 1º de 2026). Só conta onde a queda foi maior que a média. É um teto.</p>
+      <p><b>Mobilização:</b> saldo líquido de 2 pontos percentuais a mais de comparecimento. A fração de quem passa a votar que vai para Lula vem de um modelo bayesiano hierárquico das transferências entre os turnos de 2022 (inferência ecológica RxC), estimada para cada município. Só entra no potencial onde a mediana do saldo é positiva.</p>
+      <p><b>Intervalos:</b> 2.000 simulações de Monte Carlo combinam a incerteza do modelo e um bootstrap do erro municipal de 2022.</p>
     </div>
     <div>
       <h2>O que isto não diz</h2>
       <ol>
         <li>Os dados são por município, não por eleitor. Não dizem quem mudou de voto nem por quê.</li>
-        <li>As taxas de transferência vêm de 2022, quando a terceira via apoiou Lula no 2º turno. Em 2026 ela está à direita dele, então os números são um teto.</li>
-        <li>A faixa de 45% a 55%, onde quem voltou às urnas votou no adversário, é o resultado menos sólido da análise e pede checagem.</li>
+        <li>As taxas vêm de 2022, quando a terceira via apoiou Lula no 2º turno. Em 2026 ela está à direita dele.</li>
+        <li>Os intervalos medem a incerteza do modelo, não a da política: apoios, debates e a campanha podem mover os números para fora deles.</li>
         <li>Não há pesquisa de intenção de voto aqui. Quando houver, ela pesa mais que este modelo.</li>
         <li>Os dados de 2026 são de coleta própria no site de resultados do TSE. Os arquivos oficiais de dados abertos ainda não saíram.</li>
       </ol>
@@ -228,56 +254,61 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script>
 const DADOS = /*__DADOS__*/null;
-const { meta, cidades } = DADOS;
+const { meta, cidades, frentes } = DADOS;
 
 const ACOES = {
   reconquistar: { rotulo: "Reconquistar", cor: "--act-reconquistar" },
   mobilizar: { rotulo: "Mobilizar", cor: "--act-mobilizar" },
   ambas: { rotulo: "As duas", cor: "--act-ambas" },
 };
+const VEREDITO = { rende: "mobilizar rende", prejudica: "mobilizar prejudica", incerto: "mobilização incerta" };
 const fmt = n => Math.round(n).toLocaleString("pt-BR");
 const fmt1 = n => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const sinal = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt1(Math.abs(n));
+const sinalInt = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n));
+const pct = v => Math.round(100 * v) + "%";
 const milhoes = n => (n / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + " mi";
-const mil = n => n >= 1e6 ? milhoes(n) : Math.round(n / 1000).toLocaleString("pt-BR") + " mil";
+const mil = n => Math.abs(n) >= 1e6 ? milhoes(n) : Math.round(n / 1000).toLocaleString("pt-BR") + " mil";
+const iv = a => `${sinalInt(a[0]).replace(/^\+/, "")} a ${sinalInt(a[2]).replace(/^\+/, "")}`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const FAIXA = { "<35%": "menos de 35%", "35-45%": "entre 35% e 45%", "45-55%": "entre 45% e 55%", "55-65%": "entre 55% e 65%", ">65%": "mais de 65%" };
 
 /* ---------- resumo ---------- */
 document.getElementById("nacdesloc").textContent = sinal(meta.nac_desloc);
 document.getElementById("stats").innerHTML = [
   [fmt(meta.foco), `de ${fmt(meta.municipios_pais)} municípios`],
   [Math.round(100 * meta.aptos_foco / meta.aptos_pais) + "%", "do eleitorado do país"],
-  [mil(meta.pot_foco), "votos líquidos de potencial"],
-  [Math.round(100 * meta.pot_foco / meta.gap) + "%", `da diferença de ${milhoes(meta.gap)} para Flávio Bolsonaro`],
+  [mil(meta.pot[1]), `votos líquidos de potencial (90%: ${mil(meta.pot[0])} a ${mil(meta.pot[2])})`],
+  [Math.round(100 * meta.pot[1] / meta.gap) + "%", `da diferença de ${milhoes(meta.gap)} do 1º turno`],
 ].map(([b, s]) => `<div class="stat"><b class="num">${b}</b><span>${s}</span></div>`).join("");
 
 /* ---------- estado ---------- */
 const estado = { acoes: new Set(Object.keys(ACOES)), frente: "", soPrej: false, busca: "", sel: cidades[0].rank };
-const visivel = c => estado.acoes.has(c.acao) && (!estado.frente || c.frente === estado.frente) && (!estado.soPrej || c.mob_prejudica);
+const visivel = c => estado.acoes.has(c.acao) && (!estado.frente || c.frente === estado.frente) && (!estado.soPrej || c.mob_veredito === "prejudica");
 
 /* ---------- filtros ---------- */
 const chipsEl = document.getElementById("actchips");
 for (const [k, a] of Object.entries(ACOES)) {
   const n = cidades.filter(c => c.acao === k).length;
+  if (!n) continue;   // não mostra filtro vazio
   const b = document.createElement("button");
-  b.className = "chip"; b.type = "button"; b.setAttribute("aria-pressed", "true");
+  b.className = "chip"; b.type = "button"; b.setAttribute("aria-pressed", "true"); b.dataset.k = k;
   b.innerHTML = `<span class="dot ${k}"></span>${a.rotulo} <span class="num" style="color:var(--ink-3)">${n}</span>`;
   b.onclick = () => {
     if (estado.acoes.has(k) && estado.acoes.size > 1) estado.acoes.delete(k); else estado.acoes.add(k);
     for (const el of chipsEl.children) el.setAttribute("aria-pressed", estado.acoes.has(el.dataset.k) ? "true" : "false");
     atualizar();
   };
-  b.dataset.k = k;
   chipsEl.appendChild(b);
 }
 const frenteSel = document.getElementById("frente");
-const frentes = d3.rollups(cidades, v => d3.sum(v, c => c.pot), c => c.frente).sort((a, b) => b[1] - a[1]);
-for (const [f, p] of frentes) {
+for (const f of frentes) {
   const o = document.createElement("option");
-  o.value = f; o.textContent = `${f} · ${mil(p)} votos`;
+  o.value = f.nome; o.textContent = `${f.nome} · ${mil(f.pot[1])} votos`;
   frenteSel.appendChild(o);
 }
-frenteSel.onchange = () => { estado.frente = frenteSel.value; atualizar(true); };
+const escolherFrente = v => { estado.frente = v; frenteSel.value = v; atualizar(true); desenharFrentes(); };
+frenteSel.onchange = () => escolherFrente(frenteSel.value);
 document.getElementById("soprej").onchange = e => { estado.soPrej = e.target.checked; atualizar(); };
 document.getElementById("busca").oninput = e => { estado.busca = e.target.value; desenharLista(); };
 
@@ -304,16 +335,16 @@ const ufLabels = g.append("g").selectAll("text")
   .join("text").attr("class", "uf-label").attr("text-anchor", "middle")
   .attr("transform", f => `translate(${path.centroid(f)})`).text(f => SIGLA[f.properties.codarea]);
 
-const r = d3.scaleSqrt().domain([0, d3.max(cidades, c => c.pot)]).range([0, 25]);
-const rr = c => Math.max(2.6, r(c.pot));
+const r = d3.scaleSqrt().domain([0, d3.max(cidades, c => c.pot[1])]).range([0, 25]);
+const rr = c => Math.max(2.6, r(c.pot[1]));
 for (const c of cidades) [c.x, c.y] = proj([c.lon, c.lat]);
-const ordem = [...cidades].sort((a, b) => b.pot - a.pot);   // grandes embaixo
+const ordem = [...cidades].sort((a, b) => b.pot[1] - a.pot[1]);   // grandes embaixo
 const cor = c => `var(${ACOES[c.acao].cor})`;
 
 const gC = g.append("g");
 const circ = gC.selectAll("circle.city").data(ordem, c => c.rank).join("circle")
   .attr("class", "city").attr("cx", c => c.x).attr("cy", c => c.y).attr("fill", cor);
-const rings = gC.selectAll("circle.warnring").data(ordem.filter(c => c.mob_prejudica), c => c.rank).join("circle")
+const rings = gC.selectAll("circle.warnring").data(ordem.filter(c => c.mob_veredito === "prejudica"), c => c.rank).join("circle")
   .attr("class", "warnring").attr("cx", c => c.x).attr("cy", c => c.y);
 const selRing = g.append("circle").attr("class", "selring");
 
@@ -351,72 +382,103 @@ circ.on("pointerenter pointermove", (e, c) => {
   tip.hidden = false;
   tip.style.left = Math.min(Math.max(e.clientX - b.left, 120), b.width - 120) + "px";
   tip.style.top = (e.clientY - b.top) + "px";
-  tip.innerHTML = `<b>${esc(c.nome)} (${c.uf})</b> · nº ${c.rank}<br>${ACOES[c.acao].rotulo}${c.mob_prejudica ? " · mobilizar prejudica" : ""}<br><span class="num">${fmt(c.pot)}</span> votos de potencial`;
+  tip.innerHTML = `<b>${esc(c.nome)} (${c.uf})</b> · nº ${c.rank}<br>${ACOES[c.acao].rotulo} · ${VEREDITO[c.mob_veredito]}<br><span class="num">${fmt(c.pot[1])}</span> votos de potencial<br><span class="num">(90%: ${iv(c.pot)})</span>`;
 }).on("pointerleave", () => { tip.hidden = true; })
   .on("click", (e, c) => { selecionar(c.rank); });
 
 /* legenda */
-const maxPot = d3.max(cidades, c => c.pot);
 document.getElementById("legend").innerHTML =
-  Object.entries(ACOES).map(([kk, a]) => `<div class="li"><span class="dot ${kk}"></span>${a.rotulo}</div>`).join("") +
+  Object.entries(ACOES).filter(([kk]) => cidades.some(c => c.acao === kk)).map(([kk, a]) => `<div class="li"><span class="dot ${kk}"></span>${a.rotulo}</div>`).join("") +
   `<div class="li"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></svg>mobilizar prejudica</div>` +
-  `<div class="li">tamanho = votos de potencial (maior: ${mil(maxPot)})</div>`;
+  `<div class="li">tamanho = potencial, mediana (maior: ${mil(d3.max(cidades, c => c.pot[1]))})</div>`;
 
 /* ---------- ficha ---------- */
-const FAIXA = { "<35%": "menos de 35%", "35-45%": "entre 35% e 45%", "45-55%": "entre 45% e 55%", "55-65%": "entre 55% e 65%", ">65%": "mais de 65%" };
 function textoAcao(c) {
   const p = [];
   const fx = FAIXA[c.faixa];
   const verbo = c.desloc < 0 ? `Lula caiu ${fmt1(Math.abs(c.desloc))} pontos` : `Lula subiu ${fmt1(c.desloc)} pontos`;
-  const bpct = Math.round(c.b * 100);
-  const acima = c.anomalia < 0;
-  const reconq = acima
+  const reconq = c.anomalia < 0
     ? `${verbo} desde o 2º turno de 2022, ${fmt1(Math.abs(c.anomalia))} a mais que a queda média do país. Se a queda aqui tivesse ficado na média, Lula teria cerca de <b class="num">${fmt(c.terreno)}</b> votos a mais. O trabalho é de persuasão: reaproximar o eleitorado que votou nele em 2022.`
     : `${verbo} desde 2022, um resultado melhor que a média do país. Não há terreno perdido acima da média para recuperar.`;
-  const mob = `${fmt(c.abst)} eleitores (${fmt1(c.abst_pct)}%) não votaram no 1º turno. Onde Lula tem ${fx} dos votos, ${bpct}% de quem voltou às urnas no 2º turno de 2022 votou nele. Com 2 pontos a mais de comparecimento, o saldo líquido estimado é de <b class="num">${fmt(c.mob)}</b> votos.`;
+  const novos = `Em municípios como este, ${pct(c.novos[1])} de quem passou a votar no 2º turno de 2022 foi para Lula (90%: ${pct(c.novos[0])} a ${pct(c.novos[2])}).`;
+  const mobTxt = `Com 2 pontos a mais de comparecimento, o saldo estimado é de <b class="num">${sinalInt(c.mob[1])}</b> votos (90%: ${sinalInt(c.mob[0])} a ${sinalInt(c.mob[2])}).`;
 
-  if (c.acao === "reconquistar") {
-    p.push(`<p><b>Reconquistar o terreno perdido.</b> ${reconq}</p>`);
-    if (c.mob > 0) p.push(`<p>Mobilizar ajuda, mas pesa menos: 2 pontos a mais de comparecimento renderiam cerca de <b class="num">${fmt(c.mob)}</b> votos líquidos.</p>`);
-  } else if (c.acao === "mobilizar") {
-    p.push(`<p><b>Levar eleitores às urnas.</b> ${mob}</p>`);
-    if (c.terreno > 0) p.push(`<p>Há também <b class="num">${fmt(c.terreno)}</b> votos de terreno perdido acima da média.</p>`);
-  } else {
-    p.push(`<p><b>Reconquistar e mobilizar.</b> ${reconq}</p><p>${mob}</p>`);
-  }
-  if (c.mob_prejudica) {
-    p.push(`<p class="alert"><b>Evitar campanha ampla de comparecimento.</b> Onde Lula tem ${fx} dos votos, só ${bpct}% de quem voltou às urnas em 2022 votou nele. Levar mais gente à urna tende a somar votos ao adversário.${c.faixa === "45-55%" ? " É o resultado menos sólido da análise e pede checagem antes de virar decisão." : ""}</p>`);
+  if (c.acao === "reconquistar") p.push(`<p><b>Reconquistar o terreno perdido.</b> ${reconq}</p>`);
+  else if (c.acao === "mobilizar") p.push(`<p><b>Levar eleitores às urnas.</b> ${fmt(c.abst)} eleitores (${fmt1(c.abst_pct)}%) não votaram no 1º turno. ${novos} ${mobTxt}</p>`);
+  else p.push(`<p><b>Reconquistar e mobilizar.</b> ${reconq}</p>`);
+
+  if (c.mob_veredito === "prejudica") {
+    p.push(`<p class="alert"><b>Evitar campanha ampla de comparecimento.</b> ${novos} ${mobTxt} Levar mais gente à urna aqui tende a somar votos ao adversário.</p>`);
+  } else if (c.mob_veredito === "incerto") {
+    p.push(`<p><b>Os dados não decidem se mobilizar ajuda.</b> ${novos} O intervalo inclui a metade, e o saldo de +2 pp sai positivo em ${pct(c.prob_rende)} das simulações. ${c.mob[1] > 0 ? "Entra no potencial, mas com risco." : "Não entra no potencial."}</p>`);
+  } else if (c.acao !== "mobilizar") {
+    p.push(`<p><b>Mobilizar também rende.</b> ${novos} ${mobTxt}</p>`);
   }
   return p.join("");
 }
 
 function desenharFicha() {
   const c = cidades.find(c => c.rank === estado.sel);
-  const t = c.terreno, m = c.mob, tot = t + m || 1;
+  const t = c.terreno, m = Math.max(c.mob[1], 0), tot = t + m || 1;
   const segs = [
     t > 0 ? `<div class="seg" style="width:${100 * t / tot}%;background:var(--act-reconquistar)"></div>` : "",
     m > 0 ? `<div class="seg" style="width:${100 * m / tot}%;background:var(--act-mobilizar)"></div>` : "",
   ].join("");
+  const corProb = c.mob_veredito === "rende" ? "var(--pos)" : c.mob_veredito === "prejudica" ? "var(--neg)" : "var(--ink-3)";
   document.getElementById("card").innerHTML = `
     <div class="card-head">
       <div class="meta"><span class="num">nº ${c.rank} de ${meta.foco}</span>·<span>${esc(c.frente)}</span></div>
       <h2>${esc(c.nome)} <span style="color:var(--ink-3);font-weight:600">${c.uf}</span></h2>
-      <div class="meta"><span class="tag"><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo}</span>${c.mob_prejudica ? '<span class="tag plain">mobilizar prejudica</span>' : ""}</div>
+      <div class="meta"><span class="tag"><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo}</span><span class="tag plain">${VEREDITO[c.mob_veredito]}</span></div>
     </div>
     <div class="figs">
       <div class="fig"><b class="num">${fmt1(c.lula)}%</b><span>Lula, 1º turno 2026</span></div>
       <div class="fig"><b class="num">${fmt1(c.lula22)}%</b><span>Lula, 2º turno 2022</span></div>
       <div class="fig"><b class="num ${c.anomalia < 0 ? "neg" : "pos"}">${sinal(c.desloc)} pp</b><span>variação (país: ${sinal(meta.nac_desloc)})</span></div>
-      <div class="fig"><b class="num ${c.saldo < 0 ? "neg" : "pos"}">${c.saldo > 0 ? "+" : c.saldo < 0 ? "−" : ""}${fmt(Math.abs(c.saldo))}</b><span>Lula menos Flávio, em votos</span></div>
+      <div class="fig"><b class="num ${c.saldo < 0 ? "neg" : "pos"}">${sinalInt(c.saldo)}</b><span>Lula menos Flávio, em votos</span></div>
       <div class="fig"><b class="num">${fmt(c.aptos)}</b><span>eleitores aptos</span></div>
       <div class="fig"><b class="num">${fmt1(c.abst_pct)}%</b><span>abstenção no 1º turno</span></div>
     </div>
     <div class="potbar">
-      <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px"><span>Potencial estimado</span><b class="num">${fmt(c.pot)} votos</b></div>
+      <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;flex-wrap:wrap"><span>Potencial estimado</span><b class="num">${fmt(c.pot[1])} votos <span class="iv-txt">(90%: ${iv(c.pot)})</span></b></div>
       <div class="bar" role="img" aria-label="Terreno perdido ${fmt(t)} votos, mobilização ${fmt(m)} votos">${segs}</div>
       <div class="keys"><span><span class="dot reconquistar"></span>terreno perdido <b class="num">${fmt(t)}</b></span><span><span class="dot mobilizar"></span>mobilização (+2 pp) <b class="num">${fmt(m)}</b></span></div>
     </div>
+    <div class="prob">
+      <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px"><span>Chance de +2 pp de comparecimento render votos a Lula</span><b class="num">${pct(c.prob_rende)}</b></div>
+      <div class="track" role="img" aria-label="Chance de render ${pct(c.prob_rende)}"><div class="fill" style="width:${100 * c.prob_rende}%;background:${corProb}"></div><div class="mid"></div></div>
+      <small>Abaixo de 10%: prejudica. Acima de 90%: rende. Entre os dois, os dados não decidem.</small>
+    </div>
     <div class="todo"><h3>O que os dados indicam</h3>${textoAcao(c)}</div>`;
+}
+
+/* ---------- margem de erro por frente ---------- */
+function desenharFrentes() {
+  const el = document.getElementById("fchart");
+  const lw = 190, rw = 150, rowH = 34, top = 26, Wc = 820;
+  const Hc = top + rowH * frentes.length + 8;
+  const x = d3.scaleLinear().domain([0, d3.max(frentes, f => f.pot[2]) * 1.05]).range([lw, Wc - rw]).nice();
+  const ticks = x.ticks(5);
+  let h = `<svg viewBox="0 0 ${Wc} ${Hc}" role="img" aria-label="Potencial por frente com intervalo de 90%">`;
+  for (const t of ticks) h += `<line class="grid" x1="${x(t)}" x2="${x(t)}" y1="${top - 6}" y2="${Hc - 6}"/><text x="${x(t)}" y="${top - 12}" text-anchor="middle">${t === 0 ? "0" : mil(t)}</text>`;
+  frentes.forEach((f, i) => {
+    const y = top + i * rowH + rowH / 2;
+    const ativo = !estado.frente || estado.frente === f.nome;
+    h += `<g data-f="${esc(f.nome)}" style="opacity:${ativo ? 1 : 0.35}">
+      <rect class="row-hit" x="0" y="${y - rowH / 2}" width="${Wc}" height="${rowH}" rx="4"/>
+      <text class="lbl" x="0" y="${y + 4}">${esc(f.nome)}</text>
+      <text x="${lw - 12}" y="${y + 4}" text-anchor="end">${f.n} mun.</text>
+      <line class="iv" x1="${x(f.pot[0])}" x2="${x(f.pot[2])}" y1="${y}" y2="${y}" style="stroke:var(--ink);stroke-opacity:.22" stroke-width="10"/>
+      <circle cx="${x(f.pot[1])}" cy="${y}" r="5.5" style="fill:var(--ink);stroke:var(--surface)" stroke-width="2"/>
+      <text x="${Wc - rw + 10}" y="${y + 4}"><tspan class="lbl">${mil(f.pot[1])}</tspan> · ${mil(f.pot[0])} a ${mil(f.pot[2])}</text>
+    </g>`;
+  });
+  h += `</svg>`;
+  el.innerHTML = h;
+  el.querySelectorAll("g[data-f]").forEach(gg => gg.addEventListener("click", () => {
+    const f = gg.dataset.f;
+    escolherFrente(estado.frente === f ? "" : f);
+  }));
 }
 
 /* ---------- lista ---------- */
@@ -429,8 +491,8 @@ function desenharLista() {
   el.innerHTML = L.length ? L.map(c => `
     <button class="row" type="button" data-rank="${c.rank}" aria-current="${c.rank === estado.sel}">
       <span class="rk num">${c.rank}</span>
-      <span class="nm"><b>${esc(c.nome)} · ${c.uf}</b><small><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo}${c.mob_prejudica ? " · mobilizar prejudica" : ""}</small></span>
-      <span class="pt num">${fmt(c.pot)}<small>votos</small></span>
+      <span class="nm"><b>${esc(c.nome)} · ${c.uf}</b><small><span class="dot ${c.acao}"></span>${ACOES[c.acao].rotulo} · ${VEREDITO[c.mob_veredito]}</small></span>
+      <span class="pt num">${fmt(c.pot[1])}<small>${sinalInt(c.pot[0]).replace(/^\+/, "")} a ${fmt(c.pot[2])}</small></span>
     </button>`).join("") : `<div class="empty">Nenhum município com esses filtros.</div>`;
 }
 document.getElementById("list").addEventListener("click", e => {
@@ -450,10 +512,12 @@ function atualizar(enq = false) {
   circ.classed("dim", c => !visivel(c));
   rings.classed("dim", c => !visivel(c));
   desenharLista();
-  if (enq) enquadrar(cidades.filter(visivel));
-  if (estado.frente === "" && enq) anim(svg).call(zoom.transform, d3.zoomIdentity);
+  if (enq && estado.frente) enquadrar(cidades.filter(visivel));
+  else if (enq) anim(svg).call(zoom.transform, d3.zoomIdentity);
 }
 
 atualizar();
+desenharFrentes();
 selecionar(estado.sel);
+
 </script>

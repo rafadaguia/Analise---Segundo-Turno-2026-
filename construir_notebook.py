@@ -9,7 +9,7 @@ co = lambda t: C.append(nbf.v4.new_code_cell(t))
 
 md("""# Onde Lula ainda tem voto a buscar no 2º turno de 2026
 
-**Brasil de Fato — núcleo de dados** · análise de 05/10/2026
+**Brasil de Fato — núcleo de dados** · análise de 05/10/2026, revista em 07/10/2026
 
 Esta análise cruza o resultado do 1º turno de 2026 com as eleições de 2018 e 2022 e com
 o perfil social dos municípios, para responder a uma pergunta operacional: **onde a
@@ -28,58 +28,55 @@ história eleitoral, não posição no mapa.
 
 md("""## Resumo executivo
 
+> **Revisão de 07/10/2026.** As taxas de transferência foram reestimadas com inferência
+> ecológica bayesiana (seção 10), e os números de potencial ganharam intervalos de 90% por
+> simulação de Monte Carlo (seção 11). A revisão mudou duas conclusões da versão de
+> 05/10: a "anomalia" da faixa de 45% a 55% era artefato do método, e o retorno da
+> mobilização estava superestimado. Este resumo já reflete a versão revisada. As seções 6 a 9
+> ficam como estavam, para registro, com remissões à revisão.
+
 **O ponto de partida é ruim e a geografia sozinha não resolve.**
 
-Lula terminou o 1º turno com 45,16% contra 47,03% de Flávio Bolsonaro — **2,24 milhões de
-votos atrás**. Três achados definem o que fazer:
+Lula terminou o 1º turno com 45,16% contra 47,03% de Flávio Bolsonaro, **2,24 milhões de
+votos atrás**. Quatro achados definem o quadro:
 
-1. **A geografia quase não mudou de 2022 para 2026.** A correlação entre o voto em Lula
-   por município nos dois anos é de 0,987, e uma regressão simples explica 97,5% da
-   variação. Lula não perdeu lugares específicos: perdeu **5,98 pontos percentuais em
-   todo lugar, quase na mesma medida**. Isso significa que não existe um punhado de
-   municípios "perdidos" para reconquistar — existe uma perda difusa.
+1. **A geografia quase não mudou de 2022 para 2026.** A correlação entre o voto em Lula por
+   município nos dois anos é de 0,987. Lula não perdeu lugares específicos: perdeu **5,98
+   pontos em todo lugar, quase na mesma medida**.
 
-2. **A terceira via joga contra.** Em 2022, mesmo com Tebet e Ciro declarando apoio,
-   Lula capturou só **30,2%** dos votos em disputa entre os turnos; Bolsonaro levou
-   69,8%. Em 2026 a terceira via (Cury, Renan Santos, Caiado, Zema) é mais à direita que
-   a de 2022. Contar com ela é contar com prejuízo: aplicando as taxas de 2022 faixa a
-   faixa, os 9,3 milhões de votos de terceira via rendem a Lula um **saldo líquido
-   negativo de 3,4 milhões** — mais que a própria diferença a cobrir.
+2. **A terceira via joga contra.** Em 2022, mesmo com Tebet e Ciro declarando apoio, Lula
+   levou entre 35% e 59% dos votos de terceira via que escolheram um dos dois, conforme o
+   município. Em 2026 a terceira via (Cury, Renan Santos, Caiado, Zema) é mais à direita.
 
-3. **O comparecimento é o único reservatório favorável — e só em parte do mapa.** Quem
-   voltou às urnas no 2º turno de 2022 votou em Lula em 62% dos casos **onde ele já tinha
-   entre 35% e 45%**, e em 61% onde tinha mais de 65%. Mas onde ele tinha menos de 35%,
-   só 30% dos novos eleitores foram para ele — **mobilizar ali entrega 70% dos votos ao
-   adversário.**
+3. **Mobilizar só rende com segurança onde Lula já é muito forte.** Onde ele passa de 65%,
+   três em cada quatro eleitores trazidos de volta às urnas votaram nele em 2022. Onde tem
+   menos de 35%, só um em cada cinco. **No meio do mapa os dados não decidem**: o
+   comparecimento extra se dividiu quase ao meio. A versão anterior dava 62% para Lula na
+   faixa de 35% a 45%; o modelo bayesiano dá 47%, com intervalo de 32% a 64%.
 
-**As frentes, em ordem de prioridade.** Saem do próprio ranking: são os 200 municípios de
-maior potencial, agrupados. Juntas, as quatro primeiras somam **426 mil votos em 129
-municípios**.
+4. **A dinâmica entre os turnos pesa mais que o mapa.** Se o movimento de 2022 se repetir, a
+   diferença no 2º turno passa de 2,24 para algo entre 6,5 e 7 milhões. Em 2018, com outra
+   terceira via, a margem do PT melhorou 7,2 milhões entre os turnos. Esse é o tamanho do
+   que a campanha disputa fora da geografia.
 
-| # | Frente | Municípios | Potencial | Por eleitor | Tática |
-|---|---|---|---|---|---|
-| 1 | **Região metropolitana de São Paulo** | 19 | 131 mil | baixa (9/mil) | **Reduzir a derrota**, não vencer. É a maior massa de terreno perdido do país: 113 mil dos 131 mil vêm de recuperar voto, não de mobilizar. |
-| 2 | **Goiás e entorno** | 33 | 110 mil | **a mais alta (20/mil)** | Maior queda do país (−10,3 pp). Mas Lula está em 33%: **contenção de danos e persuasão, nunca campanha de comparecimento** — ali mobilizar entrega 70% dos novos votos ao adversário. |
-| 3 | **Nordeste urbano** | 43 | 107 mil | 12/mil | A única frente onde **mobilizar é o caminho principal**: 44 mil dos 107 mil vêm de comparecimento. Salvador, Recife, Fortaleza, Teresina, São Luís, Feira de Santana. |
-| 4 | **Minas Gerais** | 34 | 78 mil | 12/mil | Estado decisivo: a diferença é de só 591 mil. **Mas o potencial mineiro é difuso** — no Estado inteiro são 222 mil votos espalhados por 494 municípios. Exige campanha de capilaridade, não de concentração. |
-| 5 | Sul (RS, SC, PR) | 34 | 64 mil | 17/mil | Eficiência alta, terreno muito perdido (RS caiu 7,8 pp). Persuasão. |
+**As frentes, com margem de erro.** São os 200 municípios de maior potencial, agrupados.
+Potencial = terreno perdido acima da média + 2 pontos de comparecimento onde isso rende;
+intervalos de 90% da simulação (seção 11).
 
-Os números de cada frente estão calculados na seção 9 — não são estimativas de texto.
+| Frente | Focos | Potencial | Tática |
+|---|---|---|---|
+| **Região metropolitana de SP** | 14 | 110 mil (89–131 mil) | Persuasão. É a única frente em que o sinal da margem projetada está em jogo. Mobilização ampla tende a prejudicar. |
+| **Goiás e entorno** | 40 | 106 mil (100–112 mil) | Maior queda do país. Persuasão e contenção de danos; levar mais gente às urnas favorece o adversário. |
+| **Nordeste urbano** | 49 | 89 mil (66–114 mil) | A frente mais incerta, porque é a única onde mobilizar pesa. Mobilização segura só nas cidades onde Lula passa de 65%. |
+| Sul | 42 | 66 mil (60–72 mil) | Persuasão. |
+| Minas Gerais | 31 | 52 mil (47–58 mil) | Potencial difuso; exige capilaridade, não concentração. |
+| Norte e demais | 13 | 21 mil (20–21 mil) | |
+| Interior de SP | 11 | 16 mil (13–18 mil) | |
 
-**Onde não ir — e por que focar importa.** O potencial de votos é quase proporcional ao
-eleitorado: concentrar esforço em 200 municípios entrega 38% do potencial cobrindo 34% dos
-eleitores. **Focar não multiplica o ganho.** O que focar evita é o prejuízo, e esse sim é
-muito desigual: 2.389 municípios — 43% do país, 76,6 milhões de eleitores — têm saldo
-**negativo** de mobilização. Uma campanha de comparecimento de +1 ponto neles custaria a
-Lula 287 mil votos líquidos. São os 1.745 municípios abaixo de 35% e, por razão diferente
-e menos confiável, a faixa de 45% a 55%. **A regra de foco não é "vá aos maiores": é "não
-leve às urnas quem vai votar no adversário".**
-
-**A conta honesta:** recuperar todo o terreno perdido acima da média (1,12 milhão) e somar
-mobilização agressiva nos lugares certos (401 mil) dá **1,53 milhão — 68% da diferença de
-2,24 milhões**, e isso ignorando o prejuízo da terceira via. O 2º turno não se ganha no
-mapa: se ganha recuperando parte dos 5,98 pontos perdidos em todo o país. **O mapa diz
-onde a margem é mais barata, não onde está a vitória.**""")
+**A conta honesta:** os 200 focos somam **459 mil votos (de 407 a 514 mil), cerca de 20% da
+diferença do 1º turno**, e quase tudo é terreno perdido a reconquistar por persuasão. O 2º
+turno não se ganha no mapa. **O mapa diz onde a margem é mais barata e onde mobilizar é
+seguro, não onde está a vitória.**""")
 
 md("""## 1. Fontes
 
@@ -354,7 +351,7 @@ md("""Três conclusões operacionais saem deste gráfico:
    Nas faixas de 35–45%, 55–65% e acima de 65%, entre 61% e 65% dos eleitores recuperados
    foram para ele. Na faixa abaixo de 35%, só 30%.
 
-3. **A faixa de 45–55% é a exceção estranha**: ali quem voltou votou 67% no adversário.
+3. **A faixa de 45–55% é a exceção estranha** *(revisto na seção 10: era artefato do método)*: ali quem voltou votou 67% no adversário.
    São municípios de disputa equilibrada onde a mobilização de 2022 foi do outro lado.
    Registramos o que os dados mostram, sem alisar a curva — mas é o resultado de que
    menos confiamos, e merece checagem antes de virar decisão.""")
@@ -561,6 +558,9 @@ display(top.set_index("#").style.format({
 
 md("""### Onde **não** investir
 
+*Revisto nas seções 10 e 11: com o modelo bayesiano, a mobilização é claramente prejudicial
+abaixo de 35% e claramente favorável acima de 65%; no meio, os dados não decidem.*
+
 Mobilizar não é neutro. Nos municípios em que Lula ficou abaixo de 35%, cada eleitor
 trazido de volta à urna vota 70% das vezes no adversário.""")
 
@@ -578,7 +578,210 @@ print(f"\\n{len(ruim)} municípios ({100*len(ruim)/len(d):.0f}% do país, "
 print(f"Somados, uma campanha de comparecimento de +1 pp neles custaria "
       f"{mil(-ruim['saldo_por_pp'].sum())} votos líquidos a Lula.")""")
 
-md("""## 10. O que isto não diz
+md("""## 10. Revisão: as taxas de transferência com inferência ecológica bayesiana
+
+*Seção acrescentada em 07/10/2026.* A seção 6 estimou as taxas com uma regressão linear sem
+intercepto por faixa (o método de Goodman). Ela produziu a "exceção estranha" da faixa de
+45% a 55%. Antes de usar essas taxas para decidir onde mobilizar, testamos se a anomalia
+resiste. Há quatro problemas no método original:
+
+1. **As faixas foram definidas pelo resultado.** Os municípios foram agrupados pelo voto de
+   Lula no 2º turno de 2022, que é justamente o que a regressão tenta explicar. E as taxas
+   foram aplicadas a 2026 por uma faixa do 1º turno, ou seja, por outra régua.
+2. **A regressão é sobre votos absolutos.** São Paulo, Rio e Belo Horizonte, sozinhos, mexem
+   no coeficiente de faixas com centenas de municípios.
+3. **O comparecimento líquido mistura fluxos.** Quem deixou de votar e quem passou a votar
+   se cancelam no saldo, e a regressão não separa um do outro.
+4. **Os erros-padrão (±0,01) eram falsos.** Eles supõem que o modelo está certo. O
+   bootstrap abaixo mostra a incerteza real.""")
+
+co("""diag = pd.read_csv("painel/diagnostico_anomalia.csv")
+tab = diag[["definicao_faixa", "faixa", "municipios", "b_goodman", "b_boot_p05", "b_boot_p95",
+            "b_sem_3_maiores", "3_maiores"]].copy()
+tab.columns = ["faixa definida pelo", "faixa", "municípios", "b (Goodman)", "bootstrap p5",
+               "bootstrap p95", "b sem os 3 maiores", "3 maiores municípios da faixa"]
+display(tab.round(3).set_index(["faixa definida pelo", "faixa"]))""")
+
+md("""**O método escolhido.** O EI de King (1997) resolve tabelas 2x2. Aqui o eleitorado sai
+do 1º turno em quatro grupos (Lula, Bolsonaro, terceira via, fora: abstenção, brancos e
+nulos) e chega ao 2º em três (Lula, Bolsonaro, fora). A generalização bayesiana do método de
+King para esse caso é o modelo RxC hierárquico de Rosen, Jiang, King e Tanner (2001), que
+implementamos em PyMC (`inferencia_ecologica.py`):
+
+- cada município tem sua própria tabela de transferência 4x3;
+- as tabelas são puxadas para a média da faixa, e as médias das faixas para uma média
+  nacional (agregação parcial: uma faixa só se afasta das outras se os dados sustentarem);
+- porte e renda do município deslocam as taxas; a força de Lula **não** entra como
+  covariável, porque fazer a taxa depender da própria composição torna o modelo não
+  identificável com dados agregados;
+- a verossimilhança é Dirichlet sobre as proporções do 2º turno, com concentração que
+  cresce com o eleitorado num expoente estimado (rho). Com rho perto de 0,25, um município
+  100 vezes maior pesa cerca de 3 vezes mais, não 100;
+- as faixas passam a ser definidas pelo voto de Lula **no 1º turno**, antes da transferência,
+  e são aplicadas a 2026 pela mesma régua.
+
+O resultado é uma distribuição para cada taxa, não um número só.""")
+
+co("""tx = pd.read_csv("painel/taxas_ei_2022.csv")
+ordem = ["<35%", "35-45%", "45-55%", "55-65%", ">65%"]
+cond = tx[tx["destino"] == "lula_entre_votantes"]
+fora = cond[cond["origem"] == "fora"].set_index("faixa").reindex(ordem)
+terc = cond[cond["origem"] == "terceira_via"].set_index("faixa").reindex(ordem)
+
+resumo_ei = pd.DataFrame({
+    "quem passou a votar → Lula": fora["mediana"],
+    "  (90%)": [f"{a:.2f} a {b:.2f}" for a, b in zip(fora["p05"], fora["p95"])],
+    "b antigo": pd.Series(TX_B),
+    "terceira via → Lula": terc["mediana"],
+    "  (90%) ": [f"{a:.2f} a {b:.2f}" for a, b in zip(terc["p05"], terc["p95"])],
+})
+display(resumo_ei.round(3))
+
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 3.8), sharey=True)
+x = np.arange(len(ordem))
+for ax, df, tit, antigo in ((a1, fora, "Quem passou a votar no 2º turno", TX_B),
+                            (a2, terc, "Eleitor da terceira via", TX_A)):
+    ax.vlines(x, df["p05"], df["p95"], color=VERMELHO, lw=6, alpha=.35, label="EI bayesiano, 90%")
+    ax.plot(x, df["mediana"], "o", color=VERMELHO, ms=6, label="EI bayesiano, mediana")
+    ax.plot(x + .18, [antigo[f] for f in ordem], "x", color=CINZA, ms=7, mew=1.6, label="método antigo")
+    ax.axhline(.5, color="black", lw=.8, ls="--")
+    ax.set_xticks(x); ax.set_xticklabels(ordem)
+    ax.set_title(tit, loc="left", fontsize=10, weight="bold")
+    ax.set_xlabel("voto de Lula no 1º turno de 2022")
+a1.set_ylabel("fração que foi para Lula (entre os dois)")
+a1.set_ylim(0, 1)
+a1.legend(frameon=False, fontsize=8, loc="upper left")
+fig.tight_layout(); plt.show()""")
+
+co("""val = pd.read_csv("painel/validacao_ei.csv")
+val.columns = ["faixa", "municípios fora da amostra", "cobertura do intervalo de 90%", "erro mediano da margem (pp)"]
+display(val.round(3).set_index("faixa"))""")
+
+md("""**O que a revisão mostra.**
+
+- **A anomalia era do método, não do eleitorado.** Com as faixas definidas pelo 1º turno, a
+  fração de quem passou a votar que foi para Lula fica em 0,20, 0,47, 0,40, 0,47 e 0,74, da
+  faixa mais fraca para a mais forte. A faixa de 45% a 55% (0,40, com intervalo de 0,28 a
+  0,54) se sobrepõe às duas vizinhas e não se distingue delas. O "salto" de 0,62 para 0,33 e
+  de volta para 0,65 sumiu.
+- **O problema estava nas faixas vizinhas.** O método antigo dava 0,62 e 0,65 nas faixas de
+  35% a 45% e de 55% a 65%. O modelo dá 0,47 nas duas, com intervalo que inclui 0,5. **O
+  retorno da mobilização estava superestimado em boa parte do mapa.**
+- **Só nas pontas os dados decidem.** Onde Lula teve mais de 65% no 1º turno de 2022, três
+  em cada quatro eleitores recuperados foram para ele (0,74, de 0,64 a 0,85). Onde teve menos
+  de 35%, um em cada cinco (0,20, de 0,12 a 0,31). No meio, o comparecimento extra se dividiu
+  quase ao meio.
+- **A terceira via confirma a seção 6:** entre os dois candidatos, ela foi para Lula em 35% a
+  59% dos casos, conforme a faixa, e nunca passou de 64% nem no limite do intervalo.
+
+**Validação.** Ajustado em 80% dos municípios, o modelo previu a margem dos outros 20% com
+erro mediano de 0,9 ponto, e o intervalo de 90% acertou 98,8% dos casos. Os intervalos são,
+portanto, conservadores (um pouco largos demais), não otimistas. Diagnósticos do amostrador:
+R-hat máximo de 1,016, amostra efetiva mínima de 832, 1 divergência em 4.000 amostras.
+
+**Limites do modelo.** O efeito de porte e renda é limitado a ±2,5 desvios, para não ser
+extrapolado nas capitais. Sem o limite, São Paulo (6,2 desvios acima da média em porte)
+tinha sua taxa decidida pela extrapolação. O custo disso é que o modelo reconstrói a margem
+nacional de 2022 com um viés de cerca de 0,4 milhão a favor de Bolsonaro (1,71 milhão
+contra 2,13 milhões reais). Esse viés passa para as projeções nacionais da seção 11.""")
+
+md("""## 11. Cenários: simulação de Monte Carlo
+
+Com as taxas na forma de distribuição, cada número da análise também vira uma distribuição.
+`simulacao_montecarlo.py` sorteia 2.000 vezes. Em cada sorteio:
+
+1. **Parâmetros:** uma amostra do posterior dá a tabela de transferência de cada município.
+2. **Resíduo municipal (bootstrap):** somamos à margem de cada município um erro que o modelo
+   cometeu em 2022, sorteado com reposição entre os municípios da mesma faixa.
+3. **Cenário:** no cenário *direita*, uma fração entre 0 e 50% do que a terceira via dava a
+   Lula em 2022 vai para Flávio, sorteada a cada rodada. É hipótese, não estimativa: a
+   terceira via de 2026 (Cury, Renan Santos, Caiado, Zema) é mais à direita que a de 2022.
+
+O terreno perdido não depende de taxa de transferência; sua única incerteza vem do bootstrap
+da queda média nacional. Ele continua sendo um teto.""")
+
+co("""cn = pd.read_csv("painel/cenarios_nacional.csv")
+cn_fmt = cn.assign(**{c: (cn[c]/1e6).round(2) for c in ("p05", "mediana", "p95")})
+cn_fmt["prob_lula_a_frente"] = (100*cn["prob_lula_a_frente"]).round(0)
+cn_fmt.columns = ["cenário", "p5 (mi)", "mediana (mi)", "p95 (mi)", "% dos sorteios com Lula à frente"]
+display(cn_fmt.set_index("cenário"))
+
+s18 = d[["lula_2018_1t", "bolso_2018_1t", "lula_2018_2t", "bolso_2018_2t"]].sum()
+s22 = d[["lula_2022_1t", "bolso_2022_1t", "lula_2022_2t", "bolso_2022_2t"]].sum()
+print("variação da margem do PT entre os turnos (votos):")
+print(f"  2018 (terceira via com Ciro, Alckmin, Marina): {mil((s18.iloc[2]-s18.iloc[3])-(s18.iloc[0]-s18.iloc[1])):>12}")
+print(f"  2022 (terceira via com Tebet e Ciro):          {mil((s22.iloc[2]-s22.iloc[3])-(s22.iloc[0]-s22.iloc[1])):>12}")""")
+
+co("""cf = pd.read_csv("painel/cenarios_frentes.csv")
+pot = cf[(cf["medida"] == "potencial (terreno + 2 pp)") & (cf["frente"] != "TODOS OS FOCOS")].sort_values("mediana")
+tot = cf[(cf["medida"] == "potencial (terreno + 2 pp)") & (cf["frente"] == "TODOS OS FOCOS")].iloc[0]
+
+fig, ax = plt.subplots(figsize=(8, 3.8))
+y = np.arange(len(pot))
+ax.hlines(y, pot["p05"], pot["p95"], color=VERMELHO, lw=7, alpha=.35)
+ax.plot(pot["mediana"], y, "o", color=VERMELHO, ms=6)
+for yi, (_, l) in zip(y, pot.iterrows()):
+    ax.annotate(f"{l['mediana']/1000:.0f} mil ({l['p05']/1000:.0f}–{l['p95']/1000:.0f})",
+                xy=(l["p95"], yi), xytext=(6, -3), textcoords="offset points", fontsize=7.5, color="#555")
+ax.set_yticks(y); ax.set_yticklabels([f"{f} ({m})" for f, m in zip(pot["frente"], pot["municipios"])])
+ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, p: f"{v/1000:.0f} mil"))
+ax.set_xlabel("votos líquidos de potencial (terreno perdido + 2 pp onde mobilizar rende), intervalo de 90%")
+ax.set_xlim(0, pot["p95"].max()*1.3)
+ax.set_title(f"Potencial por frente: {tot['mediana']/1000:.0f} mil nos 200 focos "
+             f"(90%: {tot['p05']/1000:.0f} a {tot['p95']/1000:.0f} mil)", loc="left", fontsize=10, weight="bold")
+fig.tight_layout(); plt.show()
+
+med = ["mobilização +2 pp", "terceira via, base", "terceira via, direita",
+       "margem projetada, base", "margem projetada, direita"]
+t = cf[cf["medida"].isin(med)].copy()
+t["valor"] = [f"{m/1000:+,.0f} mil ({a/1000:+,.0f} a {b/1000:+,.0f})".replace(",", ".")
+              for m, a, b in zip(t["mediana"], t["p05"], t["p95"])]
+display(t.pivot(index="frente", columns="medida", values="valor")[med])""")
+
+co("""fo = pd.read_csv("painel/focos_ei.csv")
+cert_rende = (fo["prob_mob_rende"] >= .9).sum()
+cert_preju = (fo["prob_mob_rende"] <= .1).sum()
+incerto = len(fo) - cert_rende - cert_preju
+print(f"Nos {len(fo)} focos, a chance de +2 pp de comparecimento render votos líquidos a Lula:")
+print(f"   ≥ 90% (mobilizar com segurança):     {cert_rende:>4}")
+print(f"   ≤ 10% (mobilizar prejudica):         {cert_preju:>4}")
+print(f"   entre 10% e 90% (dados não decidem): {incerto:>4}")
+print()
+print("Antes, com taxas fixas por faixa, cada município caía em 'rende' ou 'prejudica', sem meio-termo.")""")
+
+md("""**O que a simulação mostra.**
+
+1. **O potencial geográfico encolheu e ganhou margem de erro:** 459 mil votos nos 200 focos
+   (90%: 407 mil a 514 mil), contra 586 mil na versão anterior. Quase tudo vem do terreno
+   perdido. A mobilização, que antes respondia por 172 mil votos, cai para 17 mil (de −8 mil
+   a +40 mil): o retorno de levar mais gente às urnas era o número mais frágil da análise.
+
+2. **Mobilizar é seguro em 25 focos, prejudicial em 97 e indefinido em 78.** Os 25 seguros
+   são cidades médias do interior do Nordeste onde Lula passa de 65% (Crato, Barbalha,
+   Araripina, Ipirá, Barreirinhas). Nos 78 indefinidos, uma campanha de comparecimento é uma
+   aposta, não uma tática.
+
+3. **Por frente, a ordem se mantém, mas com faixas:** região metropolitana de São Paulo
+   (110 mil, de 89 a 131 mil) e Goiás e entorno (106 mil, de 100 a 112 mil) empatam na
+   frente. O Nordeste urbano (89 mil, de 66 a 114 mil) é a frente mais incerta, porque é a
+   única onde a mobilização pesa. A região metropolitana de São Paulo é a única frente em que
+   o sinal da margem projetada está em jogo (de −330 mil a +133 mil no cenário base).
+
+4. **A dinâmica entre os turnos pesa mais que o mapa inteiro.** Se o movimento de 2022 se
+   repetir, a margem do 2º turno vai a cerca de −6,9 milhões (90%: −7,3 a −6,6 milhões;
+   descontado o viés de reconstrução, perto de −6,5 milhões). No cenário em que a terceira
+   via é mais à direita, a cerca de −8,8 milhões. Para comparação, em 2018 a margem do PT
+   melhorou 7,2 milhões entre os turnos. A diferença entre esses dois anos (mais de 11
+   milhões de votos) dá a escala do que está fora do modelo: a composição e o comportamento
+   da terceira via valem muito mais que os 459 mil votos de potencial geográfico.
+
+**Como ler os intervalos.** Eles medem a incerteza do modelo e o erro municipal de 2022. Não
+medem a incerteza política: um apoio, um debate ou a própria campanha podem levar o
+resultado para fora deles. A probabilidade de 0% de Lula à frente nos cenários quer dizer
+apenas que, **com o comportamento de 2022**, nenhuma das 2.000 simulações vira o placar. Não
+é uma previsão, e não deve ser publicada como chance de vitória.""")
+
+md("""## 12. O que isto não diz
 
 Uma análise que só confirma o que a redação gostaria de ouvir não serve para decidir nada.
 As limitações aqui são grandes e precisam andar junto com os números:
@@ -592,9 +795,9 @@ As limitações aqui são grandes e precisam andar junto com os números:
    Caiado e Zema. Usar as taxas de 2022 **superestima** o que Lula pode herdar. Os
    números de terceira via desta análise devem ser lidos como teto, não como projeção.
 
-3. **A faixa de 45–55% contraria a lógica do resto** (quem voltou às urnas votou 67% no
-   adversário). Pode ser real, pode ser composição de amostra. Antes de virar decisão de
-   campanha, precisa de checagem específica.
+3. **A faixa de 45–55% contrariava a lógica do resto** na versão de 05/10. A seção 10 mostra
+   que era artefato do método. O que fica é uma incerteza maior: no meio do mapa, os dados
+   de 2022 não dizem se mobilizar ajuda ou atrapalha.
 
 4. **Não há pesquisa de intenção de voto aqui.** No dia seguinte ao 1º turno não existe
    pesquisa registrada no TSE para o 2º. Quando houver, elas mandam mais que este modelo
@@ -611,18 +814,29 @@ As limitações aqui são grandes e precisam andar junto com os números:
 sobre estratégia de campanha, pela checagem com fontes da própria campanha. E convém
 deixar explícito para o leitor que são estimativas de um modelo, não resultados.""")
 
-md("""## 11. Reprodução
+md("""## 13. Reprodução
 
 ```
 analise-2t/
-├── preparar_dados.py          monta painel/painel_municipios.csv das fontes oficiais
-├── analise_2turno.ipynb       este notebook
-├── painel/painel_final.csv    base analítica, uma linha por município
-└── dados/                     zips do TSE e cache do IBGE
+├── preparar_dados.py          fontes oficiais -> painel/painel_municipios.csv
+├── gerar_painel_final.py      -> painel/painel_final.csv (seções 2 a 9)
+├── inferencia_ecologica.py    modelo RxC bayesiano de 2022 -> modelo/, painel/taxas_ei_2022.csv (seção 10)
+├── simulacao_montecarlo.py    cenários e intervalos -> painel/focos_ei.csv, cenarios_*.csv (seção 11)
+├── construir_notebook.py      gera este notebook
+└── mapa/construir_mapa.py     mapa interativo dos focos
 ```
 
-Para refazer do zero: `python3 preparar_dados.py` e depois executar o notebook. O painel
-tem 5.571 linhas e é o único insumo — o notebook não toca em arquivo cru.""")
+As seções 2 a 9 rodam com o Python do sistema (`requirements.txt`). A inferência
+ecológica precisa de PyMC e nutpie (`requirements-ei.txt`, Python 3.12):
+
+```
+uv venv .venv --python 3.12 && uv pip install --python .venv/bin/python -r requirements-ei.txt
+.venv/bin/python inferencia_ecologica.py --sem-validacao & .venv/bin/python inferencia_ecologica.py --so-validacao; wait
+.venv/bin/python simulacao_montecarlo.py
+```
+
+O ajuste leva cerca de 14 minutos em 16 núcleos. As sementes são fixas; com as mesmas
+versões, os resultados se repetem.""")
 
 nb["cells"] = C
 nb.metadata = {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},

@@ -6,3 +6,4 @@ __pycache__/
 dados/votacao_candidato_munzona_2022.zip
 dados/votacao_candidato_munzona_2018.zip
 dados/perfil_eleitorado_2026.zip
+.venv/

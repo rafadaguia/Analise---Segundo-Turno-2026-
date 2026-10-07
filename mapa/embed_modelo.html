@@ -1,0 +1,208 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focos do 2º Turno · mapa para matéria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: coluna única para iframe de matéria; tema claro fixo, para combinar com a página da notícia. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --land: #eceee9;
+  --land-line: #cdd2c8;
+  --ink: #141a17;
+  --ink-2: #4c534e;
+  --ink-3: #6b726c;
+  --rule: #e1e4dd;
+  --chip: #f1f3ee;
+  --act-reconquistar: #2a78d6;
+  --act-mobilizar: #eb6834;
+  --act-ambas: #1baf7a;
+  --neg: #b8322f;
+  --pos: #1f7a4d;
+  --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.45; }
+.embed { max-width: 680px; margin: 0 auto; padding-inline: 16px; padding-block: 14px 12px; display: grid; gap: 10px; }
+.kicker { font-family: var(--display); font-stretch: 85%; font-weight: 700; font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font-family: var(--display); font-stretch: 72%; font-weight: 800; font-size: clamp(24px, 5.4vw, 32px); line-height: 1.02; margin: 0; text-wrap: balance; }
+.dek { margin: 0; color: var(--ink-2); font-size: 14.5px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.mapwrap { position: relative; }
+#map { display: block; width: 100%; height: auto; max-width: 100%; }
+.uf { fill: var(--land); stroke: var(--land-line); stroke-width: .7; }
+.uf-label { font: 600 10px var(--display); font-stretch: 80%; fill: var(--ink-3); letter-spacing: .06em; pointer-events: none; }
+.city { stroke: var(--bg); stroke-width: 1; cursor: pointer; }
+.city:hover { stroke: var(--ink); }
+.ring { fill: none; stroke: var(--ink); stroke-dasharray: 2 2; stroke-width: 1; pointer-events: none; }
+.sel { fill: none; stroke: var(--ink); stroke-width: 2; pointer-events: none; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); border-radius: 5px; padding: 5px 8px; font-size: 12.5px; transform: translate(-50%, calc(-100% - 10px)); white-space: nowrap; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--ink-2); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; display: inline-block; }
+.dot.reconquistar { background: var(--act-reconquistar); }
+.dot.mobilizar { background: var(--act-mobilizar); }
+.dot.ambas { background: var(--act-ambas); }
+
+.pick { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pick label { font-size: 13px; color: var(--ink-2); }
+.pick select { flex: 1 1 220px; min-width: 0; font: 14px var(--body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; }
+.pick select:focus-visible { outline: 2px solid var(--act-reconquistar); outline-offset: 2px; }
+
+.info { border-top: 2px solid var(--ink); padding-top: 8px; display: grid; gap: 6px; min-height: 120px; }
+.info .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.info h2 { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 22px; margin: 0; line-height: 1.1; }
+.info .rk { font-size: 12.5px; color: var(--ink-3); }
+.info .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 2px 8px 2px 6px; border-radius: 999px; background: var(--chip); }
+.tag.plain { font-weight: 500; color: var(--ink-2); }
+.figs { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.fig { display: grid; }
+.fig b { font-family: var(--display); font-stretch: 80%; font-weight: 700; font-size: 19px; line-height: 1.15; }
+.fig span { font-size: 11.5px; color: var(--ink-3); }
+.neg { color: var(--neg); } .pos { color: var(--pos); }
+.info p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+.foot { font-size: 11.5px; color: var(--ink-3); border-top: 1px solid var(--rule); padding-top: 8px; display: grid; gap: 2px; }
+.foot a { color: var(--ink-2); }
+</style>
+
+<div class="embed">
+  <div class="kicker">Eleição 2026 · 2º turno</div>
+  <h1>Onde Lula tem mais votos a recuperar</h1>
+  <p class="dek" id="dek"></p>
+
+  <div class="mapwrap">
+    <svg id="map" role="img" aria-label="Mapa do Brasil com os 200 municípios onde Lula tem mais votos a recuperar"></svg>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="pick">
+    <label for="mun">Município</label>
+    <select id="mun"></select>
+  </div>
+
+  <div class="info" id="info" aria-live="polite"></div>
+
+  <div class="foot">
+    <span>Estimativa de modelo, não previsão. As taxas de transferência entre turnos vêm de 2022 (inferência ecológica bayesiana) e os intervalos de 90%, de 2.000 simulações.</span>
+    <span>Fontes: TSE e IBGE. <a href="https://rafadaguia.github.io/Analise---Segundo-Turno-2026-/" target="_blank" rel="noopener">Ver o mapa completo e a metodologia</a></span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const DADOS = /*__DADOS__*/null;
+const { meta, cidades } = DADOS;
+const ACOES = { reconquistar: "Reconquistar", mobilizar: "Mobilizar", ambas: "Reconquistar e mobilizar" };
+const VEREDITO = { rende: "mobilizar rende", prejudica: "mobilizar prejudica", incerto: "mobilização incerta" };
+const fmt = n => Math.round(n).toLocaleString("pt-BR");
+const fmt1 = n => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const sinal = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt1(Math.abs(n));
+const sinalInt = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n));
+const mil = n => Math.abs(n) >= 1e6 ? (n / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + " mi" : Math.round(n / 1000).toLocaleString("pt-BR") + " mil";
+const pct = v => Math.round(100 * v) + "%";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+document.getElementById("dek").textContent =
+  `Os 200 municípios onde a análise do 1º turno encontra mais votos recuperáveis: ${mil(meta.pot[1])} no total (margem de ${mil(meta.pot[0])} a ${mil(meta.pot[2])}), diante de uma diferença de ${mil(meta.gap)} para Flávio Bolsonaro. Toque num ponto ou escolha um município.`;
+
+/* mapa */
+const W = 640, H = 640;
+const svg = d3.select("#map").attr("viewBox", `0 0 ${W} ${H}`);
+const ufs = DADOS.ufs;
+for (const f of ufs.features) {
+  if (d3.geoArea(f) > 2 * Math.PI) {
+    const g = f.geometry;
+    if (g.type === "Polygon") g.coordinates.forEach(r => r.reverse());
+    else g.coordinates.forEach(p => p.forEach(r => r.reverse()));
+  }
+}
+const SIGLA = { 11:"RO",12:"AC",13:"AM",14:"RR",15:"PA",16:"AP",17:"TO",21:"MA",22:"PI",23:"CE",24:"RN",25:"PB",26:"PE",27:"AL",28:"SE",29:"BA",31:"MG",32:"ES",33:"RJ",35:"SP",41:"PR",42:"SC",43:"RS",50:"MS",51:"MT",52:"GO",53:"DF" };
+const proj = d3.geoMercator().fitExtent([[8, 8], [W - 8, H - 8]], ufs);
+const path = d3.geoPath(proj);
+svg.append("g").selectAll("path").data(ufs.features).join("path").attr("class", "uf").attr("d", path);
+const pequenas = new Set(["DF", "SE", "AL", "RN", "PB", "ES", "RJ"]);
+svg.append("g").selectAll("text").data(ufs.features.filter(f => !pequenas.has(SIGLA[f.properties.codarea])))
+  .join("text").attr("class", "uf-label").attr("text-anchor", "middle")
+  .attr("transform", f => `translate(${path.centroid(f)})`).text(f => SIGLA[f.properties.codarea]);
+
+const r = d3.scaleSqrt().domain([0, d3.max(cidades, c => c.pot[1])]).range([0, 22]);
+const rr = c => Math.max(2.4, r(c.pot[1]));
+for (const c of cidades) [c.x, c.y] = proj([c.lon, c.lat]);
+const ordem = [...cidades].sort((a, b) => b.pot[1] - a.pot[1]);
+const gC = svg.append("g");
+gC.selectAll("circle.city").data(ordem).join("circle").attr("class", "city")
+  .attr("cx", c => c.x).attr("cy", c => c.y).attr("r", rr)
+  .attr("style", c => `fill:var(--act-${c.acao})`)
+  .on("pointerenter pointermove", mostrarTip).on("pointerleave", () => tip.hidden = true)
+  .on("click", (e, c) => selecionar(c.rank));
+gC.selectAll("circle.ring").data(ordem.filter(c => c.mob_veredito === "prejudica")).join("circle")
+  .attr("class", "ring").attr("cx", c => c.x).attr("cy", c => c.y).attr("r", c => rr(c) + 2.5);
+const sel = svg.append("circle").attr("class", "sel");
+
+const tip = document.getElementById("tip"), wrap = document.querySelector(".mapwrap");
+function mostrarTip(e, c) {
+  const b = wrap.getBoundingClientRect();
+  tip.hidden = false;
+  tip.style.left = Math.min(Math.max(e.clientX - b.left, 90), b.width - 90) + "px";
+  tip.style.top = (e.clientY - b.top) + "px";
+  tip.textContent = `${c.nome} (${c.uf}) · ${fmt(c.pot[1])} votos`;
+}
+
+/* legenda: só as categorias presentes */
+const presentes = new Set(cidades.map(c => c.acao));
+document.getElementById("legend").innerHTML =
+  Object.entries(ACOES).filter(([k]) => presentes.has(k)).map(([k, v]) => `<span><span class="dot ${k}"></span>${v}</span>`).join("") +
+  `<span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></svg>levar mais eleitores às urnas favorece o adversário</span>` +
+  `<span>tamanho: votos a recuperar</span>`;
+
+/* seletor */
+const selEl = document.getElementById("mun");
+selEl.innerHTML = [...cidades].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
+  .map(c => `<option value="${c.rank}">${esc(c.nome)} (${c.uf}) · nº ${c.rank}</option>`).join("");
+selEl.onchange = () => selecionar(+selEl.value);
+
+function frase(c) {
+  if (c.anomalia < 0) {
+    const t = `Lula caiu ${fmt1(Math.abs(c.desloc))} pontos desde o 2º turno de 2022, ${fmt1(Math.abs(c.anomalia))} a mais que a média do país.`;
+    if (c.mob_veredito === "prejudica") return t + " O voto a buscar é de persuasão: aqui, quem volta às urnas tende a votar no adversário.";
+    if (c.mob_veredito === "rende") return t + ` Levar mais eleitores às urnas também rende: ${sinalInt(c.mob[1])} votos com 2 pontos a mais de comparecimento.`;
+    return t + " O voto a buscar é sobretudo de persuasão; o efeito de levar mais eleitores às urnas é incerto.";
+  }
+  return `Lula ${c.desloc < 0 ? "caiu menos" : "foi melhor"} que a média do país desde 2022; o potencial aqui vem de levar mais eleitores às urnas.`;
+}
+
+function selecionar(rank) {
+  const c = cidades.find(c => c.rank === rank);
+  selEl.value = rank;
+  sel.attr("cx", c.x).attr("cy", c.y).attr("r", rr(c) + 5);
+  document.getElementById("info").innerHTML = `
+    <div class="head"><h2>${esc(c.nome)} <span style="color:var(--ink-3)">${c.uf}</span></h2><span class="rk num">nº ${c.rank} de ${meta.foco}</span></div>
+    <div class="tags"><span class="tag"><span class="dot ${c.acao}"></span>${ACOES[c.acao]}</span><span class="tag plain">${VEREDITO[c.mob_veredito]}</span></div>
+    <div class="figs">
+      <div class="fig"><b class="num">${fmt(c.pot[1])}</b><span>votos a recuperar (90%: ${sinalInt(c.pot[0]).replace(/^\+/, "")} a ${fmt(c.pot[2])})</span></div>
+      <div class="fig"><b class="num">${fmt1(c.lula)}%</b><span>Lula no 1º turno</span></div>
+      <div class="fig"><b class="num ${c.anomalia < 0 ? "neg" : "pos"}">${sinal(c.desloc)} pp</b><span>desde 2022</span></div>
+    </div>
+    <p>${frase(c)}</p>`;
+  avisarAltura();
+}
+
+/* altura para o iframe da página que incorpora */
+function avisarAltura() {
+  try { parent.postMessage({ tipo: "focos2t-altura", altura: document.documentElement.scrollHeight }, "*"); } catch (e) {}
+}
+addEventListener("resize", avisarAltura);
+if (document.fonts) document.fonts.ready.then(avisarAltura);
+
+selecionar(cidades[0].rank);
+</script>
