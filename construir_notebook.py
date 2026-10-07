@@ -30,7 +30,8 @@ md("""## Resumo executivo
 
 > **Revisão de 07/10/2026.** As taxas de transferência foram reestimadas com inferência
 > ecológica bayesiana (seção 10), e os números de potencial ganharam intervalos de 90% por
-> simulação de Monte Carlo (seção 11). A revisão mudou duas conclusões da versão de
+> simulação de Monte Carlo (seção 11). A seção seguinte, "O que mudou nesta atualização",
+> compara as duas versões. A revisão mudou duas conclusões da versão de
 > 05/10: a "anomalia" da faixa de 45% a 55% era artefato do método, e o retorno da
 > mobilização estava superestimado. Este resumo já reflete a versão revisada. As seções 6 a 9
 > ficam como estavam, para registro, com remissões à revisão.
@@ -77,6 +78,52 @@ intervalos de 90% da simulação (seção 11).
 diferença do 1º turno**, e quase tudo é terreno perdido a reconquistar por persuasão. O 2º
 turno não se ganha no mapa. **O mapa diz onde a margem é mais barata e onde mobilizar é
 seguro, não onde está a vitória.**""")
+
+md("""## O que mudou nesta atualização (07/10/2026)
+
+A versão de 05/10 estimava as taxas de transferência entre os turnos com uma regressão linear
+por faixa e entregava um número só para cada estimativa. Esta versão refaz essa parte com
+inferência ecológica bayesiana e transforma cada número em uma distribuição. O resto da
+análise (seções 2 a 5 e o cálculo do terreno perdido) não mudou.
+
+### Melhorias de método
+
+| | Versão de 05/10 | Versão de 07/10 |
+|---|---|---|
+| **Taxas de transferência** | Regressão linear sem intercepto por faixa (método de Goodman) | Modelo bayesiano hierárquico RxC (Rosen, Jiang, King e Tanner, 2001) em PyMC. É a generalização do método de King para tabelas maiores que 2x2 |
+| **Quem vai para onde** | Só dois saldos: terceira via e variação líquida do comparecimento | Tabela completa: quatro origens no 1º turno (Lula, Bolsonaro, terceira via, fora) por três destinos no 2º (Lula, Bolsonaro, fora), separando quem passa a votar de quem deixa de votar |
+| **Faixas** | Pelo voto de Lula no 2º turno de 2022, ou seja, pelo resultado que se queria explicar | Pelo voto de Lula no 1º turno, antes da transferência, a mesma régua usada para 2026 |
+| **Peso dos municípios** | Votos absolutos: São Paulo, Rio e Belo Horizonte decidiam faixas inteiras | O peso cresce com o eleitorado num expoente estimado pelo próprio modelo (0,25): um município 100 vezes maior pesa cerca de 3 vezes mais |
+| **Diferenças entre municípios** | Uma taxa única por faixa | Uma taxa por município, puxada para a média da faixa (agregação parcial), ajustada por porte e renda |
+| **Incerteza** | Erros-padrão de ±0,01, que supunham o modelo certo | Intervalos de 90% do posterior; bootstrap de 2.000 reamostragens para mostrar a incerteza real do método antigo |
+| **Validação** | Nenhuma | Ajuste em 80% dos municípios e teste nos outros 20%: erro mediano de 0,9 ponto na margem |
+| **Projeções** | Um número por frente | 2.000 simulações de Monte Carlo, que combinam o posterior, um bootstrap do erro municipal de 2022 e cenários (terceira via como em 2022 ou mais à direita) |
+| **Mobilização por município** | "Rende" ou "prejudica", conforme a faixa | Chance de +2 pontos de comparecimento render votos a Lula, de 0% a 100% |
+
+### O que mudou nos resultados
+
+| | Versão de 05/10 | Versão de 07/10 |
+|---|---|---|
+| Faixa de 45% a 55%: fração de quem passou a votar que foi para Lula | 0,33, a "exceção estranha" | 0,40 (90%: 0,28 a 0,54), sem diferença clara para as faixas vizinhas |
+| Faixa de 35% a 45% | 0,62 | 0,47 (90%: 0,32 a 0,64) |
+| Faixa de 55% a 65% | 0,65 | 0,47 (90%: 0,36 a 0,59) |
+| Potencial dos 200 focos | 586 mil votos | 459 mil (90%: 407 mil a 514 mil) |
+| Parcela da mobilização nos focos | 172 mil votos | 17 mil (90%: −8 mil a +40 mil) |
+| Focos onde mobilizar rende / prejudica / é incerto | sem meio-termo | 25 / 97 / 78 |
+| Rio de Janeiro, Brasília, Belo Horizonte, Recife e Manaus | entre os 10 maiores focos, só pela mobilização | fora dos 200, porque o retorno da mobilização ali não se sustenta |
+
+### O que não mudou
+
+A perda de Lula continua difusa (5,98 pontos em todo o país), o terreno perdido acima da média
+continua sendo o grosso do potencial e a terceira via continua jogando contra. A ordem das
+frentes também se manteve: região metropolitana de São Paulo e Goiás e entorno à frente.
+
+### Onde ver os detalhes
+
+- **Seção 10:** o diagnóstico da anomalia, o modelo e a validação.
+- **Seção 11:** os cenários e a margem de erro de cada frente.
+- **Código:** `inferencia_ecologica.py` e `simulacao_montecarlo.py`. A versão de 05/10 está
+  preservada na tag `v1.0` do repositório.""")
 
 md("""## 1. Fontes
 

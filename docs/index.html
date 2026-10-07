@@ -172,6 +172,21 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
 .prob small { font-size: 12px; color: var(--ink-3); }
 .iv-txt { font-size: 12px; color: var(--ink-3); font-weight: 400; }
 
+
+/* o que mudou */
+.novidades { display: grid; gap: 10px; }
+.novidades h2 { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 26px; margin: 0; }
+.novidades > p { margin: 0; color: var(--ink-2); max-width: 72ch; font-size: 14.5px; }
+.tabwrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+.tabwrap table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13.5px; }
+.tabwrap th, .tabwrap td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+.tabwrap thead th { font-family: var(--display); font-stretch: 85%; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+.tabwrap tbody th { font-weight: 600; color: var(--ink); width: 22%; }
+.tabwrap td { color: var(--ink-2); }
+.tabwrap td.novo { color: var(--ink); }
+.tabwrap tr:last-child th, .tabwrap tr:last-child td { border-bottom: 0; }
+.tabwrap .grupo th { background: var(--chip); font-family: var(--display); font-stretch: 85%; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+
 @media (prefers-reduced-motion: reduce) { .city { transition: none; } }
 </style>
 
@@ -217,6 +232,32 @@ button:focus-visible, select:focus-visible, input:focus-visible, .row:focus-visi
     <h2 id="tf">Margem de erro por frente</h2>
     <p>Potencial líquido de votos nos focos de cada frente: o ponto é a mediana das 2.000 simulações, e a barra, o intervalo onde caem 90% delas. Clique numa frente para filtrar o mapa.</p>
     <div class="fchart" id="fchart"></div>
+  </section>
+
+  <section class="novidades" aria-labelledby="tn">
+    <h2 id="tn">O que mudou nesta versão</h2>
+    <p>Em 07/10/2026, as taxas de transferência de votos entre os turnos foram reestimadas com inferência ecológica bayesiana, e cada número passou a ter margem de erro. O cálculo do terreno perdido não mudou. A versão de 05/10 superestimava o retorno de levar mais eleitores às urnas.</p>
+    <div class="tabwrap">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Versão de 05/10</th><th scope="col">Versão de 07/10</th></tr></thead>
+        <tbody>
+          <tr class="grupo"><th colspan="3" scope="colgroup">Método</th></tr>
+          <tr><th scope="row">Taxas de transferência</th><td>Regressão linear por faixa (método de Goodman)</td><td class="novo">Modelo bayesiano hierárquico RxC (Rosen, Jiang, King e Tanner), a generalização do método de King para tabelas maiores que 2x2</td></tr>
+          <tr><th scope="row">Faixas de votação</th><td>Pelo voto de Lula no 2º turno de 2022, o próprio resultado a explicar</td><td class="novo">Pelo voto de Lula no 1º turno, antes da transferência</td></tr>
+          <tr><th scope="row">Peso das capitais</th><td>Votos absolutos: São Paulo, Rio e BH decidiam faixas inteiras</td><td class="novo">Peso cresce com o eleitorado, mas devagar: um município 100 vezes maior pesa cerca de 3 vezes mais</td></tr>
+          <tr><th scope="row">Incerteza</th><td>Um número por estimativa</td><td class="novo">Intervalo de 90% de 2.000 simulações de Monte Carlo, com bootstrap do erro municipal</td></tr>
+          <tr><th scope="row">Validação</th><td>Nenhuma</td><td class="novo">Teste em 20% dos municípios deixados de fora: erro mediano de 0,9 ponto na margem</td></tr>
+          <tr><th scope="row">Mobilização no município</th><td>"Rende" ou "prejudica", conforme a faixa</td><td class="novo">Chance, de 0% a 100%, de 2 pontos a mais de comparecimento renderem votos a Lula</td></tr>
+          <tr class="grupo"><th colspan="3" scope="colgroup">Resultados</th></tr>
+          <tr><th scope="row">Faixa de 45% a 55%</th><td>Exceção: só 33% de quem voltou às urnas foi para Lula</td><td class="novo">40% (de 28% a 54%), em linha com as faixas vizinhas. A anomalia era do método</td></tr>
+          <tr><th scope="row">Faixas de 35% a 45% e 55% a 65%</th><td>62% e 65% para Lula</td><td class="novo">47% nas duas, com intervalo que inclui a metade</td></tr>
+          <tr><th scope="row">Potencial dos 200 focos</th><td>586 mil votos</td><td class="novo">459 mil (de 407 mil a 514 mil)</td></tr>
+          <tr><th scope="row">Parte da mobilização</th><td>172 mil votos</td><td class="novo">17 mil (de −8 mil a +40 mil)</td></tr>
+          <tr><th scope="row">Onde mobilizar</th><td>Sem meio-termo</td><td class="novo">Rende em 25 focos, prejudica em 97, os dados não decidem em 78</td></tr>
+          <tr><th scope="row">Saíram da lista</th><td>Rio, Brasília, BH, Recife e Manaus entre os 10 maiores, só pela mobilização</td><td class="novo">Fora dos 200: o retorno da mobilização ali não se sustenta</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="notes">

@@ -7796,7 +7796,7 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=36c5c5e7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1b34150a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7821,7 +7821,7 @@ mais à direita que a de 2022. Nada aqui substitui pesquisa de intenção de vot
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e85e331e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1d36cb09">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7830,7 +7830,8 @@ mais à direita que a de 2022. Nada aqui substitui pesquisa de intenção de vot
 <h2 id="Resumo-executivo">Resumo executivo<a class="anchor-link" href="#Resumo-executivo">¶</a></h2><blockquote>
 <p><strong>Revisão de 07/10/2026.</strong> As taxas de transferência foram reestimadas com inferência
 ecológica bayesiana (seção 10), e os números de potencial ganharam intervalos de 90% por
-simulação de Monte Carlo (seção 11). A revisão mudou duas conclusões da versão de
+simulação de Monte Carlo (seção 11). A seção seguinte, "O que mudou nesta atualização",
+compara as duas versões. A revisão mudou duas conclusões da versão de
 05/10: a "anomalia" da faixa de 45% a 55% era artefato do método, e o retorno da
 mobilização estava superestimado. Este resumo já reflete a versão revisada. As seções 6 a 9
 ficam como estavam, para registro, com remissões à revisão.</p>
@@ -7924,7 +7925,132 @@ seguro, não onde está a vitória.</strong></p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88226f96">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=99e875c0">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="O-que-mudou-nesta-atualiza%C3%A7%C3%A3o-(07/10/2026)">O que mudou nesta atualização (07/10/2026)<a class="anchor-link" href="#O-que-mudou-nesta-atualiza%C3%A7%C3%A3o-(07/10/2026)">¶</a></h2><p>A versão de 05/10 estimava as taxas de transferência entre os turnos com uma regressão linear
+por faixa e entregava um número só para cada estimativa. Esta versão refaz essa parte com
+inferência ecológica bayesiana e transforma cada número em uma distribuição. O resto da
+análise (seções 2 a 5 e o cálculo do terreno perdido) não mudou.</p>
+<h3 id="Melhorias-de-m%C3%A9todo">Melhorias de método<a class="anchor-link" href="#Melhorias-de-m%C3%A9todo">¶</a></h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Versão de 05/10</th>
+<th>Versão de 07/10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Taxas de transferência</strong></td>
+<td>Regressão linear sem intercepto por faixa (método de Goodman)</td>
+<td>Modelo bayesiano hierárquico RxC (Rosen, Jiang, King e Tanner, 2001) em PyMC. É a generalização do método de King para tabelas maiores que 2x2</td>
+</tr>
+<tr>
+<td><strong>Quem vai para onde</strong></td>
+<td>Só dois saldos: terceira via e variação líquida do comparecimento</td>
+<td>Tabela completa: quatro origens no 1º turno (Lula, Bolsonaro, terceira via, fora) por três destinos no 2º (Lula, Bolsonaro, fora), separando quem passa a votar de quem deixa de votar</td>
+</tr>
+<tr>
+<td><strong>Faixas</strong></td>
+<td>Pelo voto de Lula no 2º turno de 2022, ou seja, pelo resultado que se queria explicar</td>
+<td>Pelo voto de Lula no 1º turno, antes da transferência, a mesma régua usada para 2026</td>
+</tr>
+<tr>
+<td><strong>Peso dos municípios</strong></td>
+<td>Votos absolutos: São Paulo, Rio e Belo Horizonte decidiam faixas inteiras</td>
+<td>O peso cresce com o eleitorado num expoente estimado pelo próprio modelo (0,25): um município 100 vezes maior pesa cerca de 3 vezes mais</td>
+</tr>
+<tr>
+<td><strong>Diferenças entre municípios</strong></td>
+<td>Uma taxa única por faixa</td>
+<td>Uma taxa por município, puxada para a média da faixa (agregação parcial), ajustada por porte e renda</td>
+</tr>
+<tr>
+<td><strong>Incerteza</strong></td>
+<td>Erros-padrão de ±0,01, que supunham o modelo certo</td>
+<td>Intervalos de 90% do posterior; bootstrap de 2.000 reamostragens para mostrar a incerteza real do método antigo</td>
+</tr>
+<tr>
+<td><strong>Validação</strong></td>
+<td>Nenhuma</td>
+<td>Ajuste em 80% dos municípios e teste nos outros 20%: erro mediano de 0,9 ponto na margem</td>
+</tr>
+<tr>
+<td><strong>Projeções</strong></td>
+<td>Um número por frente</td>
+<td>2.000 simulações de Monte Carlo, que combinam o posterior, um bootstrap do erro municipal de 2022 e cenários (terceira via como em 2022 ou mais à direita)</td>
+</tr>
+<tr>
+<td><strong>Mobilização por município</strong></td>
+<td>"Rende" ou "prejudica", conforme a faixa</td>
+<td>Chance de +2 pontos de comparecimento render votos a Lula, de 0% a 100%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="O-que-mudou-nos-resultados">O que mudou nos resultados<a class="anchor-link" href="#O-que-mudou-nos-resultados">¶</a></h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Versão de 05/10</th>
+<th>Versão de 07/10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Faixa de 45% a 55%: fração de quem passou a votar que foi para Lula</td>
+<td>0,33, a "exceção estranha"</td>
+<td>0,40 (90%: 0,28 a 0,54), sem diferença clara para as faixas vizinhas</td>
+</tr>
+<tr>
+<td>Faixa de 35% a 45%</td>
+<td>0,62</td>
+<td>0,47 (90%: 0,32 a 0,64)</td>
+</tr>
+<tr>
+<td>Faixa de 55% a 65%</td>
+<td>0,65</td>
+<td>0,47 (90%: 0,36 a 0,59)</td>
+</tr>
+<tr>
+<td>Potencial dos 200 focos</td>
+<td>586 mil votos</td>
+<td>459 mil (90%: 407 mil a 514 mil)</td>
+</tr>
+<tr>
+<td>Parcela da mobilização nos focos</td>
+<td>172 mil votos</td>
+<td>17 mil (90%: −8 mil a +40 mil)</td>
+</tr>
+<tr>
+<td>Focos onde mobilizar rende / prejudica / é incerto</td>
+<td>sem meio-termo</td>
+<td>25 / 97 / 78</td>
+</tr>
+<tr>
+<td>Rio de Janeiro, Brasília, Belo Horizonte, Recife e Manaus</td>
+<td>entre os 10 maiores focos, só pela mobilização</td>
+<td>fora dos 200, porque o retorno da mobilização ali não se sustenta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="O-que-n%C3%A3o-mudou">O que não mudou<a class="anchor-link" href="#O-que-n%C3%A3o-mudou">¶</a></h3><p>A perda de Lula continua difusa (5,98 pontos em todo o país), o terreno perdido acima da média
+continua sendo o grosso do potencial e a terceira via continua jogando contra. A ordem das
+frentes também se manteve: região metropolitana de São Paulo e Goiás e entorno à frente.</p>
+<h3 id="Onde-ver-os-detalhes">Onde ver os detalhes<a class="anchor-link" href="#Onde-ver-os-detalhes">¶</a></h3><ul>
+<li><strong>Seção 10:</strong> o diagnóstico da anomalia, o modelo e a validação.</li>
+<li><strong>Seção 11:</strong> os cenários e a margem de erro de cada frente.</li>
+<li><strong>Código:</strong> <code>inferencia_ecologica.py</code> e <code>simulacao_montecarlo.py</code>. A versão de 05/10 está
+preservada na tag <code>v1.0</code> do repositório.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=87b19963">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7978,7 +8104,7 @@ contraste a fazer com estas estimativas.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fe8840e4">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=10d43907">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8024,7 +8150,7 @@ contraste a fazer com estas estimativas.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=825381d5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=48fb3139">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8034,7 +8160,7 @@ contraste a fazer com estas estimativas.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=29438cd9">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=50547dc5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8082,7 +8208,7 @@ contraste a fazer com estas estimativas.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=761d6956">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3633b35a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8093,7 +8219,7 @@ votado do 1º turno de cada ano (Bolsonaro, nº 17 em 2018 e nº 22 em 2022).</p
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=75bdc5cc">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=cc450ced">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8199,7 +8325,7 @@ votado do 1º turno de cada ano (Bolsonaro, nº 17 em 2018 e nº 22 em 2022).</p
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fa162d6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=504f6fff">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8210,7 +8336,7 @@ haveria um mapa a reconquistar. Não foi o que aconteceu.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=271dffe7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a957e0b2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8250,7 +8376,7 @@ Coeficiente ~1 com constante ~-7: a nuvem inteira desceu, quase sem mudar de for
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=955cd745">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e1980bcb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8312,7 +8438,7 @@ intervalo p10–p90: -11.36 a -4.05 pp
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=440995b9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7bad85b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8325,7 +8451,7 @@ dessa média</strong>, não na média.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=acd1851e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b1e79a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8336,7 +8462,7 @@ social forte e estrutura de abstenção nenhuma.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=42575642">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=97bc0969">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8396,7 +8522,7 @@ social forte e estrutura de abstenção nenhuma.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b46bad07">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cb44e5bc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8414,7 +8540,7 @@ ajuda ou atrapalha depende do município, e é isso que a seção 6 mede.</li>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1f731332">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c718a4d2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8426,7 +8552,7 @@ em Lula do que o seu próprio perfil faria esperar.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=916f7438">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2a9b82eb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8476,7 +8602,7 @@ resíduo: média -0.000 pp, desvio 2.27 pp
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1114052a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d7563c91">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8498,7 +8624,7 @@ constante.</li>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1e6f9d28">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=949e97a2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8515,7 +8641,7 @@ regressão <strong>sem intercepto</strong>, para que os coeficientes somem exata
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=30aa9ec7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9c61eaba">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8560,7 +8686,7 @@ regressão <strong>sem intercepto</strong>, para que os coeficientes somem exata
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ec089577">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fe9bc79a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8687,7 +8813,7 @@ regressão <strong>sem intercepto</strong>, para que os coeficientes somem exata
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=707c3639">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ec559ee4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8727,7 +8853,7 @@ regressão <strong>sem intercepto</strong>, para que os coeficientes somem exata
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aa346753">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=59c16638">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8754,7 +8880,7 @@ menos confiamos, e merece checagem antes de virar decisão.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=733572b1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f54b52aa">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8764,7 +8890,7 @@ menos confiamos, e merece checagem antes de virar decisão.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2ed5e831">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8d6dc9fc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8816,7 +8942,7 @@ menos confiamos, e merece checagem antes de virar decisão.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a8484651">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4ad6745f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8834,7 +8960,7 @@ diferença entre fazer campanha em todo lugar e fazer campanha em algum lugar.</
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9d019a8c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c15bdb5c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8846,7 +8972,7 @@ perderam — e, portanto, o que há de mais concreto para reconquistar.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fda505e3">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e14ce036">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8894,7 +9020,7 @@ diferença a cobrir:              2.240.002 votos
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=079c3d2f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=01293e4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8937,7 +9063,7 @@ diferença a cobrir:              2.240.002 votos
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88cec07d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7bab7375">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8947,7 +9073,7 @@ diferença a cobrir:              2.240.002 votos
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a7fdbb85">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3157583e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9166,7 +9292,7 @@ diferença a cobrir:              2.240.002 votos
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2a6227a4">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d052fbb5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9206,7 +9332,7 @@ diferença a cobrir:              2.240.002 votos
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdf81f9b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1d9f0a03">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9220,7 +9346,7 @@ município novo acrescenta pouco e dilui o esforço.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9a976c4e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bab5036b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9292,18 +9418,18 @@ município novo acrescenta pouco e dilui o esforço.</p>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 </style>
-<table id="T_da530">
+<table id="T_a0ff4">
 <thead>
 <tr>
 <th class="blank level0"> </th>
-<th class="col_heading level0 col0" id="T_da530_level0_col0">municípios</th>
-<th class="col_heading level0 col1" id="T_da530_level0_col1">eleitorado</th>
-<th class="col_heading level0 col2" id="T_da530_level0_col2">Lula_%</th>
-<th class="col_heading level0 col3" id="T_da530_level0_col3">saldo_atual</th>
-<th class="col_heading level0 col4" id="T_da530_level0_col4">terreno_perdido</th>
-<th class="col_heading level0 col5" id="T_da530_level0_col5">mobilizacao_2pp</th>
-<th class="col_heading level0 col6" id="T_da530_level0_col6">potencial</th>
-<th class="col_heading level0 col7" id="T_da530_level0_col7">por_mil_eleitores</th>
+<th class="col_heading level0 col0" id="T_a0ff4_level0_col0">municípios</th>
+<th class="col_heading level0 col1" id="T_a0ff4_level0_col1">eleitorado</th>
+<th class="col_heading level0 col2" id="T_a0ff4_level0_col2">Lula_%</th>
+<th class="col_heading level0 col3" id="T_a0ff4_level0_col3">saldo_atual</th>
+<th class="col_heading level0 col4" id="T_a0ff4_level0_col4">terreno_perdido</th>
+<th class="col_heading level0 col5" id="T_a0ff4_level0_col5">mobilizacao_2pp</th>
+<th class="col_heading level0 col6" id="T_a0ff4_level0_col6">potencial</th>
+<th class="col_heading level0 col7" id="T_a0ff4_level0_col7">por_mil_eleitores</th>
 </tr>
 <tr>
 <th class="index_name level0">frente</th>
@@ -9319,103 +9445,103 @@ município novo acrescenta pouco e dilui o esforço.</p>
 </thead>
 <tbody>
 <tr>
-<th class="row_heading level0 row0" id="T_da530_level0_row0">2. Metropolitana de SP</th>
-<td class="data row0 col0" id="T_da530_row0_col0">19.000000</td>
-<td class="data row0 col1" id="T_da530_row0_col1">15,433,424</td>
-<td class="data row0 col2" id="T_da530_row0_col2">45.2</td>
-<td class="data row0 col3" id="T_da530_row0_col3">174,983</td>
-<td class="data row0 col4" id="T_da530_row0_col4">112,682</td>
-<td class="data row0 col5" id="T_da530_row0_col5">18,802</td>
-<td class="data row0 col6" id="T_da530_row0_col6">131,484</td>
-<td class="data row0 col7" id="T_da530_row0_col7">8.5</td>
+<th class="row_heading level0 row0" id="T_a0ff4_level0_row0">2. Metropolitana de SP</th>
+<td class="data row0 col0" id="T_a0ff4_row0_col0">19.000000</td>
+<td class="data row0 col1" id="T_a0ff4_row0_col1">15,433,424</td>
+<td class="data row0 col2" id="T_a0ff4_row0_col2">45.2</td>
+<td class="data row0 col3" id="T_a0ff4_row0_col3">174,983</td>
+<td class="data row0 col4" id="T_a0ff4_row0_col4">112,682</td>
+<td class="data row0 col5" id="T_a0ff4_row0_col5">18,802</td>
+<td class="data row0 col6" id="T_a0ff4_row0_col6">131,484</td>
+<td class="data row0 col7" id="T_a0ff4_row0_col7">8.5</td>
 </tr>
 <tr>
-<th class="row_heading level0 row1" id="T_da530_level0_row1">4. Goiás e entorno</th>
-<td class="data row1 col0" id="T_da530_row1_col0">33.000000</td>
-<td class="data row1 col1" id="T_da530_row1_col1">5,650,544</td>
-<td class="data row1 col2" id="T_da530_row1_col2">33.2</td>
-<td class="data row1 col3" id="T_da530_row1_col3">-861,335</td>
-<td class="data row1 col4" id="T_da530_row1_col4">97,169</td>
-<td class="data row1 col5" id="T_da530_row1_col5">13,054</td>
-<td class="data row1 col6" id="T_da530_row1_col6">110,223</td>
-<td class="data row1 col7" id="T_da530_row1_col7">19.5</td>
+<th class="row_heading level0 row1" id="T_a0ff4_level0_row1">4. Goiás e entorno</th>
+<td class="data row1 col0" id="T_a0ff4_row1_col0">33.000000</td>
+<td class="data row1 col1" id="T_a0ff4_row1_col1">5,650,544</td>
+<td class="data row1 col2" id="T_a0ff4_row1_col2">33.2</td>
+<td class="data row1 col3" id="T_a0ff4_row1_col3">-861,335</td>
+<td class="data row1 col4" id="T_a0ff4_row1_col4">97,169</td>
+<td class="data row1 col5" id="T_a0ff4_row1_col5">13,054</td>
+<td class="data row1 col6" id="T_a0ff4_row1_col6">110,223</td>
+<td class="data row1 col7" id="T_a0ff4_row1_col7">19.5</td>
 </tr>
 <tr>
-<th class="row_heading level0 row2" id="T_da530_level0_row2">3. Nordeste urbano</th>
-<td class="data row2 col0" id="T_da530_row2_col0">43.000000</td>
-<td class="data row2 col1" id="T_da530_row2_col1">8,581,489</td>
-<td class="data row2 col2" id="T_da530_row2_col2">58.2</td>
-<td class="data row2 col3" id="T_da530_row2_col3">1,547,367</td>
-<td class="data row2 col4" id="T_da530_row2_col4">62,357</td>
-<td class="data row2 col5" id="T_da530_row2_col5">44,266</td>
-<td class="data row2 col6" id="T_da530_row2_col6">106,624</td>
-<td class="data row2 col7" id="T_da530_row2_col7">12.4</td>
+<th class="row_heading level0 row2" id="T_a0ff4_level0_row2">3. Nordeste urbano</th>
+<td class="data row2 col0" id="T_a0ff4_row2_col0">43.000000</td>
+<td class="data row2 col1" id="T_a0ff4_row2_col1">8,581,489</td>
+<td class="data row2 col2" id="T_a0ff4_row2_col2">58.2</td>
+<td class="data row2 col3" id="T_a0ff4_row2_col3">1,547,367</td>
+<td class="data row2 col4" id="T_a0ff4_row2_col4">62,357</td>
+<td class="data row2 col5" id="T_a0ff4_row2_col5">44,266</td>
+<td class="data row2 col6" id="T_a0ff4_row2_col6">106,624</td>
+<td class="data row2 col7" id="T_a0ff4_row2_col7">12.4</td>
 </tr>
 <tr>
-<th class="row_heading level0 row3" id="T_da530_level0_row3">1. Minas Gerais</th>
-<td class="data row3 col0" id="T_da530_row3_col0">34.000000</td>
-<td class="data row3 col1" id="T_da530_row3_col1">6,366,979</td>
-<td class="data row3 col2" id="T_da530_row3_col2">41.6</td>
-<td class="data row3 col3" id="T_da530_row3_col3">-330,066</td>
-<td class="data row3 col4" id="T_da530_row3_col4">52,307</td>
-<td class="data row3 col5" id="T_da530_row3_col5">25,387</td>
-<td class="data row3 col6" id="T_da530_row3_col6">77,694</td>
-<td class="data row3 col7" id="T_da530_row3_col7">12.2</td>
+<th class="row_heading level0 row3" id="T_a0ff4_level0_row3">1. Minas Gerais</th>
+<td class="data row3 col0" id="T_a0ff4_row3_col0">34.000000</td>
+<td class="data row3 col1" id="T_a0ff4_row3_col1">6,366,979</td>
+<td class="data row3 col2" id="T_a0ff4_row3_col2">41.6</td>
+<td class="data row3 col3" id="T_a0ff4_row3_col3">-330,066</td>
+<td class="data row3 col4" id="T_a0ff4_row3_col4">52,307</td>
+<td class="data row3 col5" id="T_a0ff4_row3_col5">25,387</td>
+<td class="data row3 col6" id="T_a0ff4_row3_col6">77,694</td>
+<td class="data row3 col7" id="T_a0ff4_row3_col7">12.2</td>
 </tr>
 <tr>
-<th class="row_heading level0 row4" id="T_da530_level0_row4">6. Sul</th>
-<td class="data row4 col0" id="T_da530_row4_col0">34.000000</td>
-<td class="data row4 col1" id="T_da530_row4_col1">3,678,518</td>
-<td class="data row4 col2" id="T_da530_row4_col2">37.1</td>
-<td class="data row4 col3" id="T_da530_row4_col3">-441,068</td>
-<td class="data row4 col4" id="T_da530_row4_col4">56,616</td>
-<td class="data row4 col5" id="T_da530_row4_col5">7,668</td>
-<td class="data row4 col6" id="T_da530_row4_col6">64,284</td>
-<td class="data row4 col7" id="T_da530_row4_col7">17.5</td>
+<th class="row_heading level0 row4" id="T_a0ff4_level0_row4">6. Sul</th>
+<td class="data row4 col0" id="T_a0ff4_row4_col0">34.000000</td>
+<td class="data row4 col1" id="T_a0ff4_row4_col1">3,678,518</td>
+<td class="data row4 col2" id="T_a0ff4_row4_col2">37.1</td>
+<td class="data row4 col3" id="T_a0ff4_row4_col3">-441,068</td>
+<td class="data row4 col4" id="T_a0ff4_row4_col4">56,616</td>
+<td class="data row4 col5" id="T_a0ff4_row4_col5">7,668</td>
+<td class="data row4 col6" id="T_a0ff4_row4_col6">64,284</td>
+<td class="data row4 col7" id="T_a0ff4_row4_col7">17.5</td>
 </tr>
 <tr>
-<th class="row_heading level0 row5" id="T_da530_level0_row5">7. Norte e demais</th>
-<td class="data row5 col0" id="T_da530_row5_col0">17.000000</td>
-<td class="data row5 col1" id="T_da530_row5_col1">3,989,130</td>
-<td class="data row5 col2" id="T_da530_row5_col2">39.0</td>
-<td class="data row5 col3" id="T_da530_row5_col3">-426,983</td>
-<td class="data row5 col4" id="T_da530_row5_col4">16,191</td>
-<td class="data row5 col5" id="T_da530_row5_col5">18,461</td>
-<td class="data row5 col6" id="T_da530_row5_col6">34,652</td>
-<td class="data row5 col7" id="T_da530_row5_col7">8.7</td>
+<th class="row_heading level0 row5" id="T_a0ff4_level0_row5">7. Norte e demais</th>
+<td class="data row5 col0" id="T_a0ff4_row5_col0">17.000000</td>
+<td class="data row5 col1" id="T_a0ff4_row5_col1">3,989,130</td>
+<td class="data row5 col2" id="T_a0ff4_row5_col2">39.0</td>
+<td class="data row5 col3" id="T_a0ff4_row5_col3">-426,983</td>
+<td class="data row5 col4" id="T_a0ff4_row5_col4">16,191</td>
+<td class="data row5 col5" id="T_a0ff4_row5_col5">18,461</td>
+<td class="data row5 col6" id="T_a0ff4_row5_col6">34,652</td>
+<td class="data row5 col7" id="T_a0ff4_row5_col7">8.7</td>
 </tr>
 <tr>
-<th class="row_heading level0 row6" id="T_da530_level0_row6">5. Rio de Janeiro</th>
-<td class="data row6 col0" id="T_da530_row6_col0">5.000000</td>
-<td class="data row6 col1" id="T_da530_row6_col1">6,926,790</td>
-<td class="data row6 col2" id="T_da530_row6_col2">42.2</td>
-<td class="data row6 col3" id="T_da530_row6_col3">-389,985</td>
-<td class="data row6 col4" id="T_da530_row6_col4">0</td>
-<td class="data row6 col5" id="T_da530_row6_col5">33,526</td>
-<td class="data row6 col6" id="T_da530_row6_col6">33,526</td>
-<td class="data row6 col7" id="T_da530_row6_col7">4.8</td>
+<th class="row_heading level0 row6" id="T_a0ff4_level0_row6">5. Rio de Janeiro</th>
+<td class="data row6 col0" id="T_a0ff4_row6_col0">5.000000</td>
+<td class="data row6 col1" id="T_a0ff4_row6_col1">6,926,790</td>
+<td class="data row6 col2" id="T_a0ff4_row6_col2">42.2</td>
+<td class="data row6 col3" id="T_a0ff4_row6_col3">-389,985</td>
+<td class="data row6 col4" id="T_a0ff4_row6_col4">0</td>
+<td class="data row6 col5" id="T_a0ff4_row6_col5">33,526</td>
+<td class="data row6 col6" id="T_a0ff4_row6_col6">33,526</td>
+<td class="data row6 col7" id="T_a0ff4_row6_col7">4.8</td>
 </tr>
 <tr>
-<th class="row_heading level0 row7" id="T_da530_level0_row7">2b. Interior de SP</th>
-<td class="data row7 col0" id="T_da530_row7_col0">15.000000</td>
-<td class="data row7 col1" id="T_da530_row7_col1">2,902,645</td>
-<td class="data row7 col2" id="T_da530_row7_col2">38.5</td>
-<td class="data row7 col3" id="T_da530_row7_col3">-273,528</td>
-<td class="data row7 col4" id="T_da530_row7_col4">17,041</td>
-<td class="data row7 col5" id="T_da530_row7_col5">10,545</td>
-<td class="data row7 col6" id="T_da530_row7_col6">27,585</td>
-<td class="data row7 col7" id="T_da530_row7_col7">9.5</td>
+<th class="row_heading level0 row7" id="T_a0ff4_level0_row7">2b. Interior de SP</th>
+<td class="data row7 col0" id="T_a0ff4_row7_col0">15.000000</td>
+<td class="data row7 col1" id="T_a0ff4_row7_col1">2,902,645</td>
+<td class="data row7 col2" id="T_a0ff4_row7_col2">38.5</td>
+<td class="data row7 col3" id="T_a0ff4_row7_col3">-273,528</td>
+<td class="data row7 col4" id="T_a0ff4_row7_col4">17,041</td>
+<td class="data row7 col5" id="T_a0ff4_row7_col5">10,545</td>
+<td class="data row7 col6" id="T_a0ff4_row7_col6">27,585</td>
+<td class="data row7 col7" id="T_a0ff4_row7_col7">9.5</td>
 </tr>
 <tr>
-<th class="row_heading level0 row8" id="T_da530_level0_row8">TOTAL</th>
-<td class="data row8 col0" id="T_da530_row8_col0">200.000000</td>
-<td class="data row8 col1" id="T_da530_row8_col1">53,529,519</td>
-<td class="data row8 col2" id="T_da530_row8_col2">43.9</td>
-<td class="data row8 col3" id="T_da530_row8_col3">-1,000,615</td>
-<td class="data row8 col4" id="T_da530_row8_col4">414,363</td>
-<td class="data row8 col5" id="T_da530_row8_col5">171,708</td>
-<td class="data row8 col6" id="T_da530_row8_col6">586,071</td>
-<td class="data row8 col7" id="T_da530_row8_col7">10.9</td>
+<th class="row_heading level0 row8" id="T_a0ff4_level0_row8">TOTAL</th>
+<td class="data row8 col0" id="T_a0ff4_row8_col0">200.000000</td>
+<td class="data row8 col1" id="T_a0ff4_row8_col1">53,529,519</td>
+<td class="data row8 col2" id="T_a0ff4_row8_col2">43.9</td>
+<td class="data row8 col3" id="T_a0ff4_row8_col3">-1,000,615</td>
+<td class="data row8 col4" id="T_a0ff4_row8_col4">414,363</td>
+<td class="data row8 col5" id="T_a0ff4_row8_col5">171,708</td>
+<td class="data row8 col6" id="T_a0ff4_row8_col6">586,071</td>
+<td class="data row8 col7" id="T_a0ff4_row8_col7">10.9</td>
 </tr>
 </tbody>
 </table>
@@ -9423,7 +9549,7 @@ município novo acrescenta pouco e dilui o esforço.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d8699959">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b46bfe53">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9483,7 +9609,7 @@ O que concentrar evita é o PREJUÍZO — e esse é muito desigual:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4b6b3d76">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9f301c37">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9493,7 +9619,7 @@ O que concentrar evita é o PREJUÍZO — e esse é muito desigual:
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=973aa8ba">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b2ae5c7e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9524,20 +9650,20 @@ O que concentrar evita é o PREJUÍZO — e esse é muito desigual:
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 </style>
-<table id="T_bb2f5">
+<table id="T_83ab8">
 <thead>
 <tr>
 <th class="blank level0"> </th>
-<th class="col_heading level0 col0" id="T_bb2f5_level0_col0">municipio</th>
-<th class="col_heading level0 col1" id="T_bb2f5_level0_col1">uf</th>
-<th class="col_heading level0 col2" id="T_bb2f5_level0_col2">faixa</th>
-<th class="col_heading level0 col3" id="T_bb2f5_level0_col3">lula_pct_26</th>
-<th class="col_heading level0 col4" id="T_bb2f5_level0_col4">desloc</th>
-<th class="col_heading level0 col5" id="T_bb2f5_level0_col5">validos_26</th>
-<th class="col_heading level0 col6" id="T_bb2f5_level0_col6">abstencao_26</th>
-<th class="col_heading level0 col7" id="T_bb2f5_level0_col7">terreno_perdido</th>
-<th class="col_heading level0 col8" id="T_bb2f5_level0_col8">mobilizacao_2pp</th>
-<th class="col_heading level0 col9" id="T_bb2f5_level0_col9">prioridade</th>
+<th class="col_heading level0 col0" id="T_83ab8_level0_col0">municipio</th>
+<th class="col_heading level0 col1" id="T_83ab8_level0_col1">uf</th>
+<th class="col_heading level0 col2" id="T_83ab8_level0_col2">faixa</th>
+<th class="col_heading level0 col3" id="T_83ab8_level0_col3">lula_pct_26</th>
+<th class="col_heading level0 col4" id="T_83ab8_level0_col4">desloc</th>
+<th class="col_heading level0 col5" id="T_83ab8_level0_col5">validos_26</th>
+<th class="col_heading level0 col6" id="T_83ab8_level0_col6">abstencao_26</th>
+<th class="col_heading level0 col7" id="T_83ab8_level0_col7">terreno_perdido</th>
+<th class="col_heading level0 col8" id="T_83ab8_level0_col8">mobilizacao_2pp</th>
+<th class="col_heading level0 col9" id="T_83ab8_level0_col9">prioridade</th>
 </tr>
 <tr>
 <th class="index_name level0">#</th>
@@ -9555,524 +9681,524 @@ O que concentrar evita é o PREJUÍZO — e esse é muito desigual:
 </thead>
 <tbody>
 <tr>
-<th class="row_heading level0 row0" id="T_bb2f5_level0_row0">1</th>
-<td class="data row0 col0" id="T_bb2f5_row0_col0">SÃO PAULO</td>
-<td class="data row0 col1" id="T_bb2f5_row0_col1">SP</td>
-<td class="data row0 col2" id="T_bb2f5_row0_col2">45-55%</td>
-<td class="data row0 col3" id="T_bb2f5_row0_col3">46.600000</td>
-<td class="data row0 col4" id="T_bb2f5_row0_col4">-7.000000</td>
-<td class="data row0 col5" id="T_bb2f5_row0_col5">6,552,820</td>
-<td class="data row0 col6" id="T_bb2f5_row0_col6">2,138,713</td>
-<td class="data row0 col7" id="T_bb2f5_row0_col7">64,215</td>
-<td class="data row0 col8" id="T_bb2f5_row0_col8">0</td>
-<td class="data row0 col9" id="T_bb2f5_row0_col9">64,215</td>
+<th class="row_heading level0 row0" id="T_83ab8_level0_row0">1</th>
+<td class="data row0 col0" id="T_83ab8_row0_col0">SÃO PAULO</td>
+<td class="data row0 col1" id="T_83ab8_row0_col1">SP</td>
+<td class="data row0 col2" id="T_83ab8_row0_col2">45-55%</td>
+<td class="data row0 col3" id="T_83ab8_row0_col3">46.600000</td>
+<td class="data row0 col4" id="T_83ab8_row0_col4">-7.000000</td>
+<td class="data row0 col5" id="T_83ab8_row0_col5">6,552,820</td>
+<td class="data row0 col6" id="T_83ab8_row0_col6">2,138,713</td>
+<td class="data row0 col7" id="T_83ab8_row0_col7">64,215</td>
+<td class="data row0 col8" id="T_83ab8_row0_col8">0</td>
+<td class="data row0 col9" id="T_83ab8_row0_col9">64,215</td>
 </tr>
 <tr>
-<th class="row_heading level0 row1" id="T_bb2f5_level0_row1">2</th>
-<td class="data row1 col0" id="T_bb2f5_row1_col0">RIO DE JANEIRO</td>
-<td class="data row1 col1" id="T_bb2f5_row1_col1">RJ</td>
-<td class="data row1 col2" id="T_bb2f5_row1_col2">35-45%</td>
-<td class="data row1 col3" id="T_bb2f5_row1_col3">43.900000</td>
-<td class="data row1 col4" id="T_bb2f5_row1_col4">-3.400000</td>
-<td class="data row1 col5" id="T_bb2f5_row1_col5">3,471,874</td>
-<td class="data row1 col6" id="T_bb2f5_row1_col6">1,293,714</td>
-<td class="data row1 col7" id="T_bb2f5_row1_col7">0</td>
-<td class="data row1 col8" id="T_bb2f5_row1_col8">23,971</td>
-<td class="data row1 col9" id="T_bb2f5_row1_col9">23,971</td>
+<th class="row_heading level0 row1" id="T_83ab8_level0_row1">2</th>
+<td class="data row1 col0" id="T_83ab8_row1_col0">RIO DE JANEIRO</td>
+<td class="data row1 col1" id="T_83ab8_row1_col1">RJ</td>
+<td class="data row1 col2" id="T_83ab8_row1_col2">35-45%</td>
+<td class="data row1 col3" id="T_83ab8_row1_col3">43.900000</td>
+<td class="data row1 col4" id="T_83ab8_row1_col4">-3.400000</td>
+<td class="data row1 col5" id="T_83ab8_row1_col5">3,471,874</td>
+<td class="data row1 col6" id="T_83ab8_row1_col6">1,293,714</td>
+<td class="data row1 col7" id="T_83ab8_row1_col7">0</td>
+<td class="data row1 col8" id="T_83ab8_row1_col8">23,971</td>
+<td class="data row1 col9" id="T_83ab8_row1_col9">23,971</td>
 </tr>
 <tr>
-<th class="row_heading level0 row2" id="T_bb2f5_level0_row2">3</th>
-<td class="data row2 col0" id="T_bb2f5_row2_col0">GOIÂNIA</td>
-<td class="data row2 col1" id="T_bb2f5_row2_col1">GO</td>
-<td class="data row2 col2" id="T_bb2f5_row2_col2">&lt;35%</td>
-<td class="data row2 col3" id="T_bb2f5_row2_col3">28.200000</td>
-<td class="data row2 col4" id="T_bb2f5_row2_col4">-7.800000</td>
-<td class="data row2 col5" id="T_bb2f5_row2_col5">791,095</td>
-<td class="data row2 col6" id="T_bb2f5_row2_col6">202,732</td>
-<td class="data row2 col7" id="T_bb2f5_row2_col7">14,646</td>
-<td class="data row2 col8" id="T_bb2f5_row2_col8">0</td>
-<td class="data row2 col9" id="T_bb2f5_row2_col9">14,646</td>
+<th class="row_heading level0 row2" id="T_83ab8_level0_row2">3</th>
+<td class="data row2 col0" id="T_83ab8_row2_col0">GOIÂNIA</td>
+<td class="data row2 col1" id="T_83ab8_row2_col1">GO</td>
+<td class="data row2 col2" id="T_83ab8_row2_col2">&lt;35%</td>
+<td class="data row2 col3" id="T_83ab8_row2_col3">28.200000</td>
+<td class="data row2 col4" id="T_83ab8_row2_col4">-7.800000</td>
+<td class="data row2 col5" id="T_83ab8_row2_col5">791,095</td>
+<td class="data row2 col6" id="T_83ab8_row2_col6">202,732</td>
+<td class="data row2 col7" id="T_83ab8_row2_col7">14,646</td>
+<td class="data row2 col8" id="T_83ab8_row2_col8">0</td>
+<td class="data row2 col9" id="T_83ab8_row2_col9">14,646</td>
 </tr>
 <tr>
-<th class="row_heading level0 row3" id="T_bb2f5_level0_row3">4</th>
-<td class="data row3 col0" id="T_bb2f5_row3_col0">APARECIDA DE GOIÂNIA</td>
-<td class="data row3 col1" id="T_bb2f5_row3_col1">GO</td>
-<td class="data row3 col2" id="T_bb2f5_row3_col2">&lt;35%</td>
-<td class="data row3 col3" id="T_bb2f5_row3_col3">31.600000</td>
-<td class="data row3 col4" id="T_bb2f5_row3_col4">-10.500000</td>
-<td class="data row3 col5" id="T_bb2f5_row3_col5">258,136</td>
-<td class="data row3 col6" id="T_bb2f5_row3_col6">72,628</td>
-<td class="data row3 col7" id="T_bb2f5_row3_col7">11,624</td>
-<td class="data row3 col8" id="T_bb2f5_row3_col8">0</td>
-<td class="data row3 col9" id="T_bb2f5_row3_col9">11,624</td>
+<th class="row_heading level0 row3" id="T_83ab8_level0_row3">4</th>
+<td class="data row3 col0" id="T_83ab8_row3_col0">APARECIDA DE GOIÂNIA</td>
+<td class="data row3 col1" id="T_83ab8_row3_col1">GO</td>
+<td class="data row3 col2" id="T_83ab8_row3_col2">&lt;35%</td>
+<td class="data row3 col3" id="T_83ab8_row3_col3">31.600000</td>
+<td class="data row3 col4" id="T_83ab8_row3_col4">-10.500000</td>
+<td class="data row3 col5" id="T_83ab8_row3_col5">258,136</td>
+<td class="data row3 col6" id="T_83ab8_row3_col6">72,628</td>
+<td class="data row3 col7" id="T_83ab8_row3_col7">11,624</td>
+<td class="data row3 col8" id="T_83ab8_row3_col8">0</td>
+<td class="data row3 col9" id="T_83ab8_row3_col9">11,624</td>
 </tr>
 <tr>
-<th class="row_heading level0 row4" id="T_bb2f5_level0_row4">5</th>
-<td class="data row4 col0" id="T_bb2f5_row4_col0">BRASÍLIA</td>
-<td class="data row4 col1" id="T_bb2f5_row4_col1">DF</td>
-<td class="data row4 col2" id="T_bb2f5_row4_col2">35-45%</td>
-<td class="data row4 col3" id="T_bb2f5_row4_col3">38.100000</td>
-<td class="data row4 col4" id="T_bb2f5_row4_col4">-3.100000</td>
-<td class="data row4 col5" id="T_bb2f5_row4_col5">1,772,808</td>
-<td class="data row4 col6" id="T_bb2f5_row4_col6">426,924</td>
-<td class="data row4 col7" id="T_bb2f5_row4_col7">0</td>
-<td class="data row4 col8" id="T_bb2f5_row4_col8">10,930</td>
-<td class="data row4 col9" id="T_bb2f5_row4_col9">10,930</td>
+<th class="row_heading level0 row4" id="T_83ab8_level0_row4">5</th>
+<td class="data row4 col0" id="T_83ab8_row4_col0">BRASÍLIA</td>
+<td class="data row4 col1" id="T_83ab8_row4_col1">DF</td>
+<td class="data row4 col2" id="T_83ab8_row4_col2">35-45%</td>
+<td class="data row4 col3" id="T_83ab8_row4_col3">38.100000</td>
+<td class="data row4 col4" id="T_83ab8_row4_col4">-3.100000</td>
+<td class="data row4 col5" id="T_83ab8_row4_col5">1,772,808</td>
+<td class="data row4 col6" id="T_83ab8_row4_col6">426,924</td>
+<td class="data row4 col7" id="T_83ab8_row4_col7">0</td>
+<td class="data row4 col8" id="T_83ab8_row4_col8">10,930</td>
+<td class="data row4 col9" id="T_83ab8_row4_col9">10,930</td>
 </tr>
 <tr>
-<th class="row_heading level0 row5" id="T_bb2f5_level0_row5">6</th>
-<td class="data row5 col0" id="T_bb2f5_row5_col0">BELO HORIZONTE</td>
-<td class="data row5 col1" id="T_bb2f5_row5_col1">MG</td>
-<td class="data row5 col2" id="T_bb2f5_row5_col2">35-45%</td>
-<td class="data row5 col3" id="T_bb2f5_row5_col3">41.400000</td>
-<td class="data row5 col4" id="T_bb2f5_row5_col4">-4.400000</td>
-<td class="data row5 col5" id="T_bb2f5_row5_col5">1,430,488</td>
-<td class="data row5 col6" id="T_bb2f5_row5_col6">464,334</td>
-<td class="data row5 col7" id="T_bb2f5_row5_col7">0</td>
-<td class="data row5 col8" id="T_bb2f5_row5_col8">9,520</td>
-<td class="data row5 col9" id="T_bb2f5_row5_col9">9,520</td>
+<th class="row_heading level0 row5" id="T_83ab8_level0_row5">6</th>
+<td class="data row5 col0" id="T_83ab8_row5_col0">BELO HORIZONTE</td>
+<td class="data row5 col1" id="T_83ab8_row5_col1">MG</td>
+<td class="data row5 col2" id="T_83ab8_row5_col2">35-45%</td>
+<td class="data row5 col3" id="T_83ab8_row5_col3">41.400000</td>
+<td class="data row5 col4" id="T_83ab8_row5_col4">-4.400000</td>
+<td class="data row5 col5" id="T_83ab8_row5_col5">1,430,488</td>
+<td class="data row5 col6" id="T_83ab8_row5_col6">464,334</td>
+<td class="data row5 col7" id="T_83ab8_row5_col7">0</td>
+<td class="data row5 col8" id="T_83ab8_row5_col8">9,520</td>
+<td class="data row5 col9" id="T_83ab8_row5_col9">9,520</td>
 </tr>
 <tr>
-<th class="row_heading level0 row6" id="T_bb2f5_level0_row6">7</th>
-<td class="data row6 col0" id="T_bb2f5_row6_col0">SALVADOR</td>
-<td class="data row6 col1" id="T_bb2f5_row6_col1">BA</td>
-<td class="data row6 col2" id="T_bb2f5_row6_col2">&gt;65%</td>
-<td class="data row6 col3" id="T_bb2f5_row6_col3">65.300000</td>
-<td class="data row6 col4" id="T_bb2f5_row6_col4">-5.500000</td>
-<td class="data row6 col5" id="T_bb2f5_row6_col5">1,447,014</td>
-<td class="data row6 col6" id="T_bb2f5_row6_col6">393,886</td>
-<td class="data row6 col7" id="T_bb2f5_row6_col7">0</td>
-<td class="data row6 col8" id="T_bb2f5_row6_col8">8,839</td>
-<td class="data row6 col9" id="T_bb2f5_row6_col9">8,839</td>
+<th class="row_heading level0 row6" id="T_83ab8_level0_row6">7</th>
+<td class="data row6 col0" id="T_83ab8_row6_col0">SALVADOR</td>
+<td class="data row6 col1" id="T_83ab8_row6_col1">BA</td>
+<td class="data row6 col2" id="T_83ab8_row6_col2">&gt;65%</td>
+<td class="data row6 col3" id="T_83ab8_row6_col3">65.300000</td>
+<td class="data row6 col4" id="T_83ab8_row6_col4">-5.500000</td>
+<td class="data row6 col5" id="T_83ab8_row6_col5">1,447,014</td>
+<td class="data row6 col6" id="T_83ab8_row6_col6">393,886</td>
+<td class="data row6 col7" id="T_83ab8_row6_col7">0</td>
+<td class="data row6 col8" id="T_83ab8_row6_col8">8,839</td>
+<td class="data row6 col9" id="T_83ab8_row6_col9">8,839</td>
 </tr>
 <tr>
-<th class="row_heading level0 row7" id="T_bb2f5_level0_row7">8</th>
-<td class="data row7 col0" id="T_bb2f5_row7_col0">OSASCO</td>
-<td class="data row7 col1" id="T_bb2f5_row7_col1">SP</td>
-<td class="data row7 col2" id="T_bb2f5_row7_col2">35-45%</td>
-<td class="data row7 col3" id="T_bb2f5_row7_col3">43.300000</td>
-<td class="data row7 col4" id="T_bb2f5_row7_col4">-7.100000</td>
-<td class="data row7 col5" id="T_bb2f5_row7_col5">421,757</td>
-<td class="data row7 col6" id="T_bb2f5_row7_col6">136,038</td>
-<td class="data row7 col7" id="T_bb2f5_row7_col7">4,567</td>
-<td class="data row7 col8" id="T_bb2f5_row7_col8">2,827</td>
-<td class="data row7 col9" id="T_bb2f5_row7_col9">7,394</td>
+<th class="row_heading level0 row7" id="T_83ab8_level0_row7">8</th>
+<td class="data row7 col0" id="T_83ab8_row7_col0">OSASCO</td>
+<td class="data row7 col1" id="T_83ab8_row7_col1">SP</td>
+<td class="data row7 col2" id="T_83ab8_row7_col2">35-45%</td>
+<td class="data row7 col3" id="T_83ab8_row7_col3">43.300000</td>
+<td class="data row7 col4" id="T_83ab8_row7_col4">-7.100000</td>
+<td class="data row7 col5" id="T_83ab8_row7_col5">421,757</td>
+<td class="data row7 col6" id="T_83ab8_row7_col6">136,038</td>
+<td class="data row7 col7" id="T_83ab8_row7_col7">4,567</td>
+<td class="data row7 col8" id="T_83ab8_row7_col8">2,827</td>
+<td class="data row7 col9" id="T_83ab8_row7_col9">7,394</td>
 </tr>
 <tr>
-<th class="row_heading level0 row8" id="T_bb2f5_level0_row8">9</th>
-<td class="data row8 col0" id="T_bb2f5_row8_col0">RECIFE</td>
-<td class="data row8 col1" id="T_bb2f5_row8_col1">PE</td>
-<td class="data row8 col2" id="T_bb2f5_row8_col2">55-65%</td>
-<td class="data row8 col3" id="T_bb2f5_row8_col3">55.300000</td>
-<td class="data row8 col4" id="T_bb2f5_row8_col4">-1.000000</td>
-<td class="data row8 col5" id="T_bb2f5_row8_col5">983,138</td>
-<td class="data row8 col6" id="T_bb2f5_row8_col6">196,129</td>
-<td class="data row8 col7" id="T_bb2f5_row8_col7">0</td>
-<td class="data row8 col8" id="T_bb2f5_row8_col8">7,235</td>
-<td class="data row8 col9" id="T_bb2f5_row8_col9">7,235</td>
+<th class="row_heading level0 row8" id="T_83ab8_level0_row8">9</th>
+<td class="data row8 col0" id="T_83ab8_row8_col0">RECIFE</td>
+<td class="data row8 col1" id="T_83ab8_row8_col1">PE</td>
+<td class="data row8 col2" id="T_83ab8_row8_col2">55-65%</td>
+<td class="data row8 col3" id="T_83ab8_row8_col3">55.300000</td>
+<td class="data row8 col4" id="T_83ab8_row8_col4">-1.000000</td>
+<td class="data row8 col5" id="T_83ab8_row8_col5">983,138</td>
+<td class="data row8 col6" id="T_83ab8_row8_col6">196,129</td>
+<td class="data row8 col7" id="T_83ab8_row8_col7">0</td>
+<td class="data row8 col8" id="T_83ab8_row8_col8">7,235</td>
+<td class="data row8 col9" id="T_83ab8_row8_col9">7,235</td>
 </tr>
 <tr>
-<th class="row_heading level0 row9" id="T_bb2f5_level0_row9">10</th>
-<td class="data row9 col0" id="T_bb2f5_row9_col0">MANAUS</td>
-<td class="data row9 col1" id="T_bb2f5_row9_col1">AM</td>
-<td class="data row9 col2" id="T_bb2f5_row9_col2">35-45%</td>
-<td class="data row9 col3" id="T_bb2f5_row9_col3">37.100000</td>
-<td class="data row9 col4" id="T_bb2f5_row9_col4">-1.600000</td>
-<td class="data row9 col5" id="T_bb2f5_row9_col5">1,182,539</td>
-<td class="data row9 col6" id="T_bb2f5_row9_col6">254,036</td>
-<td class="data row9 col7" id="T_bb2f5_row9_col7">0</td>
-<td class="data row9 col8" id="T_bb2f5_row9_col8">7,150</td>
-<td class="data row9 col9" id="T_bb2f5_row9_col9">7,150</td>
+<th class="row_heading level0 row9" id="T_83ab8_level0_row9">10</th>
+<td class="data row9 col0" id="T_83ab8_row9_col0">MANAUS</td>
+<td class="data row9 col1" id="T_83ab8_row9_col1">AM</td>
+<td class="data row9 col2" id="T_83ab8_row9_col2">35-45%</td>
+<td class="data row9 col3" id="T_83ab8_row9_col3">37.100000</td>
+<td class="data row9 col4" id="T_83ab8_row9_col4">-1.600000</td>
+<td class="data row9 col5" id="T_83ab8_row9_col5">1,182,539</td>
+<td class="data row9 col6" id="T_83ab8_row9_col6">254,036</td>
+<td class="data row9 col7" id="T_83ab8_row9_col7">0</td>
+<td class="data row9 col8" id="T_83ab8_row9_col8">7,150</td>
+<td class="data row9 col9" id="T_83ab8_row9_col9">7,150</td>
 </tr>
 <tr>
-<th class="row_heading level0 row10" id="T_bb2f5_level0_row10">11</th>
-<td class="data row10 col0" id="T_bb2f5_row10_col0">UBERLÂNDIA</td>
-<td class="data row10 col1" id="T_bb2f5_row10_col1">MG</td>
-<td class="data row10 col2" id="T_bb2f5_row10_col2">35-45%</td>
-<td class="data row10 col3" id="T_bb2f5_row10_col3">40.000000</td>
-<td class="data row10 col4" id="T_bb2f5_row10_col4">-6.900000</td>
-<td class="data row10 col5" id="T_bb2f5_row10_col5">409,921</td>
-<td class="data row10 col6" id="T_bb2f5_row10_col6">110,517</td>
-<td class="data row10 col7" id="T_bb2f5_row10_col7">3,764</td>
-<td class="data row10 col8" id="T_bb2f5_row10_col8">2,614</td>
-<td class="data row10 col9" id="T_bb2f5_row10_col9">6,378</td>
+<th class="row_heading level0 row10" id="T_83ab8_level0_row10">11</th>
+<td class="data row10 col0" id="T_83ab8_row10_col0">UBERLÂNDIA</td>
+<td class="data row10 col1" id="T_83ab8_row10_col1">MG</td>
+<td class="data row10 col2" id="T_83ab8_row10_col2">35-45%</td>
+<td class="data row10 col3" id="T_83ab8_row10_col3">40.000000</td>
+<td class="data row10 col4" id="T_83ab8_row10_col4">-6.900000</td>
+<td class="data row10 col5" id="T_83ab8_row10_col5">409,921</td>
+<td class="data row10 col6" id="T_83ab8_row10_col6">110,517</td>
+<td class="data row10 col7" id="T_83ab8_row10_col7">3,764</td>
+<td class="data row10 col8" id="T_83ab8_row10_col8">2,614</td>
+<td class="data row10 col9" id="T_83ab8_row10_col9">6,378</td>
 </tr>
 <tr>
-<th class="row_heading level0 row11" id="T_bb2f5_level0_row11">12</th>
-<td class="data row11 col0" id="T_bb2f5_row11_col0">RIO VERDE</td>
-<td class="data row11 col1" id="T_bb2f5_row11_col1">GO</td>
-<td class="data row11 col2" id="T_bb2f5_row11_col2">&lt;35%</td>
-<td class="data row11 col3" id="T_bb2f5_row11_col3">26.800000</td>
-<td class="data row11 col4" id="T_bb2f5_row11_col4">-11.300000</td>
-<td class="data row11 col5" id="T_bb2f5_row11_col5">117,044</td>
-<td class="data row11 col6" id="T_bb2f5_row11_col6">31,961</td>
-<td class="data row11 col7" id="T_bb2f5_row11_col7">6,271</td>
-<td class="data row11 col8" id="T_bb2f5_row11_col8">0</td>
-<td class="data row11 col9" id="T_bb2f5_row11_col9">6,271</td>
+<th class="row_heading level0 row11" id="T_83ab8_level0_row11">12</th>
+<td class="data row11 col0" id="T_83ab8_row11_col0">RIO VERDE</td>
+<td class="data row11 col1" id="T_83ab8_row11_col1">GO</td>
+<td class="data row11 col2" id="T_83ab8_row11_col2">&lt;35%</td>
+<td class="data row11 col3" id="T_83ab8_row11_col3">26.800000</td>
+<td class="data row11 col4" id="T_83ab8_row11_col4">-11.300000</td>
+<td class="data row11 col5" id="T_83ab8_row11_col5">117,044</td>
+<td class="data row11 col6" id="T_83ab8_row11_col6">31,961</td>
+<td class="data row11 col7" id="T_83ab8_row11_col7">6,271</td>
+<td class="data row11 col8" id="T_83ab8_row11_col8">0</td>
+<td class="data row11 col9" id="T_83ab8_row11_col9">6,271</td>
 </tr>
 <tr>
-<th class="row_heading level0 row12" id="T_bb2f5_level0_row12">13</th>
-<td class="data row12 col0" id="T_bb2f5_row12_col0">JUAZEIRO DO NORTE</td>
-<td class="data row12 col1" id="T_bb2f5_row12_col1">CE</td>
-<td class="data row12 col2" id="T_bb2f5_row12_col2">&gt;65%</td>
-<td class="data row12 col3" id="T_bb2f5_row12_col3">67.100000</td>
-<td class="data row12 col4" id="T_bb2f5_row12_col4">-9.200000</td>
-<td class="data row12 col5" id="T_bb2f5_row12_col5">161,821</td>
-<td class="data row12 col6" id="T_bb2f5_row12_col6">31,426</td>
-<td class="data row12 col7" id="T_bb2f5_row12_col7">5,270</td>
-<td class="data row12 col8" id="T_bb2f5_row12_col8">906</td>
-<td class="data row12 col9" id="T_bb2f5_row12_col9">6,176</td>
+<th class="row_heading level0 row12" id="T_83ab8_level0_row12">13</th>
+<td class="data row12 col0" id="T_83ab8_row12_col0">JUAZEIRO DO NORTE</td>
+<td class="data row12 col1" id="T_83ab8_row12_col1">CE</td>
+<td class="data row12 col2" id="T_83ab8_row12_col2">&gt;65%</td>
+<td class="data row12 col3" id="T_83ab8_row12_col3">67.100000</td>
+<td class="data row12 col4" id="T_83ab8_row12_col4">-9.200000</td>
+<td class="data row12 col5" id="T_83ab8_row12_col5">161,821</td>
+<td class="data row12 col6" id="T_83ab8_row12_col6">31,426</td>
+<td class="data row12 col7" id="T_83ab8_row12_col7">5,270</td>
+<td class="data row12 col8" id="T_83ab8_row12_col8">906</td>
+<td class="data row12 col9" id="T_83ab8_row12_col9">6,176</td>
 </tr>
 <tr>
-<th class="row_heading level0 row13" id="T_bb2f5_level0_row13">14</th>
-<td class="data row13 col0" id="T_bb2f5_row13_col0">PELOTAS</td>
-<td class="data row13 col1" id="T_bb2f5_row13_col1">RS</td>
-<td class="data row13 col2" id="T_bb2f5_row13_col2">45-55%</td>
-<td class="data row13 col3" id="T_bb2f5_row13_col3">47.100000</td>
-<td class="data row13 col4" id="T_bb2f5_row13_col4">-9.100000</td>
-<td class="data row13 col5" id="T_bb2f5_row13_col5">183,906</td>
-<td class="data row13 col6" id="T_bb2f5_row13_col6">50,012</td>
-<td class="data row13 col7" id="T_bb2f5_row13_col7">5,792</td>
-<td class="data row13 col8" id="T_bb2f5_row13_col8">0</td>
-<td class="data row13 col9" id="T_bb2f5_row13_col9">5,792</td>
+<th class="row_heading level0 row13" id="T_83ab8_level0_row13">14</th>
+<td class="data row13 col0" id="T_83ab8_row13_col0">PELOTAS</td>
+<td class="data row13 col1" id="T_83ab8_row13_col1">RS</td>
+<td class="data row13 col2" id="T_83ab8_row13_col2">45-55%</td>
+<td class="data row13 col3" id="T_83ab8_row13_col3">47.100000</td>
+<td class="data row13 col4" id="T_83ab8_row13_col4">-9.100000</td>
+<td class="data row13 col5" id="T_83ab8_row13_col5">183,906</td>
+<td class="data row13 col6" id="T_83ab8_row13_col6">50,012</td>
+<td class="data row13 col7" id="T_83ab8_row13_col7">5,792</td>
+<td class="data row13 col8" id="T_83ab8_row13_col8">0</td>
+<td class="data row13 col9" id="T_83ab8_row13_col9">5,792</td>
 </tr>
 <tr>
-<th class="row_heading level0 row14" id="T_bb2f5_level0_row14">15</th>
-<td class="data row14 col0" id="T_bb2f5_row14_col0">FEIRA DE SANTANA</td>
-<td class="data row14 col1" id="T_bb2f5_row14_col1">BA</td>
-<td class="data row14 col2" id="T_bb2f5_row14_col2">55-65%</td>
-<td class="data row14 col3" id="T_bb2f5_row14_col3">57.100000</td>
-<td class="data row14 col4" id="T_bb2f5_row14_col4">-6.900000</td>
-<td class="data row14 col5" id="T_bb2f5_row14_col5">340,031</td>
-<td class="data row14 col6" id="T_bb2f5_row14_col6">74,984</td>
-<td class="data row14 col7" id="T_bb2f5_row14_col7">3,132</td>
-<td class="data row14 col8" id="T_bb2f5_row14_col8">2,562</td>
-<td class="data row14 col9" id="T_bb2f5_row14_col9">5,693</td>
+<th class="row_heading level0 row14" id="T_83ab8_level0_row14">15</th>
+<td class="data row14 col0" id="T_83ab8_row14_col0">FEIRA DE SANTANA</td>
+<td class="data row14 col1" id="T_83ab8_row14_col1">BA</td>
+<td class="data row14 col2" id="T_83ab8_row14_col2">55-65%</td>
+<td class="data row14 col3" id="T_83ab8_row14_col3">57.100000</td>
+<td class="data row14 col4" id="T_83ab8_row14_col4">-6.900000</td>
+<td class="data row14 col5" id="T_83ab8_row14_col5">340,031</td>
+<td class="data row14 col6" id="T_83ab8_row14_col6">74,984</td>
+<td class="data row14 col7" id="T_83ab8_row14_col7">3,132</td>
+<td class="data row14 col8" id="T_83ab8_row14_col8">2,562</td>
+<td class="data row14 col9" id="T_83ab8_row14_col9">5,693</td>
 </tr>
 <tr>
-<th class="row_heading level0 row15" id="T_bb2f5_level0_row15">16</th>
-<td class="data row15 col0" id="T_bb2f5_row15_col0">SANTO ANDRÉ</td>
-<td class="data row15 col1" id="T_bb2f5_row15_col1">SP</td>
-<td class="data row15 col2" id="T_bb2f5_row15_col2">35-45%</td>
-<td class="data row15 col3" id="T_bb2f5_row15_col3">41.200000</td>
-<td class="data row15 col4" id="T_bb2f5_row15_col4">-6.700000</td>
-<td class="data row15 col5" id="T_bb2f5_row15_col5">413,143</td>
-<td class="data row15 col6" id="T_bb2f5_row15_col6">133,844</td>
-<td class="data row15 col7" id="T_bb2f5_row15_col7">2,847</td>
-<td class="data row15 col8" id="T_bb2f5_row15_col8">2,776</td>
-<td class="data row15 col9" id="T_bb2f5_row15_col9">5,623</td>
+<th class="row_heading level0 row15" id="T_83ab8_level0_row15">16</th>
+<td class="data row15 col0" id="T_83ab8_row15_col0">SANTO ANDRÉ</td>
+<td class="data row15 col1" id="T_83ab8_row15_col1">SP</td>
+<td class="data row15 col2" id="T_83ab8_row15_col2">35-45%</td>
+<td class="data row15 col3" id="T_83ab8_row15_col3">41.200000</td>
+<td class="data row15 col4" id="T_83ab8_row15_col4">-6.700000</td>
+<td class="data row15 col5" id="T_83ab8_row15_col5">413,143</td>
+<td class="data row15 col6" id="T_83ab8_row15_col6">133,844</td>
+<td class="data row15 col7" id="T_83ab8_row15_col7">2,847</td>
+<td class="data row15 col8" id="T_83ab8_row15_col8">2,776</td>
+<td class="data row15 col9" id="T_83ab8_row15_col9">5,623</td>
 </tr>
 <tr>
-<th class="row_heading level0 row16" id="T_bb2f5_level0_row16">17</th>
-<td class="data row16 col0" id="T_bb2f5_row16_col0">GUARULHOS</td>
-<td class="data row16 col1" id="T_bb2f5_row16_col1">SP</td>
-<td class="data row16 col2" id="T_bb2f5_row16_col2">35-45%</td>
-<td class="data row16 col3" id="T_bb2f5_row16_col3">40.200000</td>
-<td class="data row16 col4" id="T_bb2f5_row16_col4">-6.100000</td>
-<td class="data row16 col5" id="T_bb2f5_row16_col5">713,469</td>
-<td class="data row16 col6" id="T_bb2f5_row16_col6">182,660</td>
-<td class="data row16 col7" id="T_bb2f5_row16_col7">967</td>
-<td class="data row16 col8" id="T_bb2f5_row16_col8">4,593</td>
-<td class="data row16 col9" id="T_bb2f5_row16_col9">5,559</td>
+<th class="row_heading level0 row16" id="T_83ab8_level0_row16">17</th>
+<td class="data row16 col0" id="T_83ab8_row16_col0">GUARULHOS</td>
+<td class="data row16 col1" id="T_83ab8_row16_col1">SP</td>
+<td class="data row16 col2" id="T_83ab8_row16_col2">35-45%</td>
+<td class="data row16 col3" id="T_83ab8_row16_col3">40.200000</td>
+<td class="data row16 col4" id="T_83ab8_row16_col4">-6.100000</td>
+<td class="data row16 col5" id="T_83ab8_row16_col5">713,469</td>
+<td class="data row16 col6" id="T_83ab8_row16_col6">182,660</td>
+<td class="data row16 col7" id="T_83ab8_row16_col7">967</td>
+<td class="data row16 col8" id="T_83ab8_row16_col8">4,593</td>
+<td class="data row16 col9" id="T_83ab8_row16_col9">5,559</td>
 </tr>
 <tr>
-<th class="row_heading level0 row17" id="T_bb2f5_level0_row17">18</th>
-<td class="data row17 col0" id="T_bb2f5_row17_col0">COTIA</td>
-<td class="data row17 col1" id="T_bb2f5_row17_col1">SP</td>
-<td class="data row17 col2" id="T_bb2f5_row17_col2">35-45%</td>
-<td class="data row17 col3" id="T_bb2f5_row17_col3">41.800000</td>
-<td class="data row17 col4" id="T_bb2f5_row17_col4">-9.100000</td>
-<td class="data row17 col5" id="T_bb2f5_row17_col5">141,376</td>
-<td class="data row17 col6" id="T_bb2f5_row17_col6">44,070</td>
-<td class="data row17 col7" id="T_bb2f5_row17_col7">4,369</td>
-<td class="data row17 col8" id="T_bb2f5_row17_col8">940</td>
-<td class="data row17 col9" id="T_bb2f5_row17_col9">5,309</td>
+<th class="row_heading level0 row17" id="T_83ab8_level0_row17">18</th>
+<td class="data row17 col0" id="T_83ab8_row17_col0">COTIA</td>
+<td class="data row17 col1" id="T_83ab8_row17_col1">SP</td>
+<td class="data row17 col2" id="T_83ab8_row17_col2">35-45%</td>
+<td class="data row17 col3" id="T_83ab8_row17_col3">41.800000</td>
+<td class="data row17 col4" id="T_83ab8_row17_col4">-9.100000</td>
+<td class="data row17 col5" id="T_83ab8_row17_col5">141,376</td>
+<td class="data row17 col6" id="T_83ab8_row17_col6">44,070</td>
+<td class="data row17 col7" id="T_83ab8_row17_col7">4,369</td>
+<td class="data row17 col8" id="T_83ab8_row17_col8">940</td>
+<td class="data row17 col9" id="T_83ab8_row17_col9">5,309</td>
 </tr>
 <tr>
-<th class="row_heading level0 row18" id="T_bb2f5_level0_row18">19</th>
-<td class="data row18 col0" id="T_bb2f5_row18_col0">SOBRAL</td>
-<td class="data row18 col1" id="T_bb2f5_row18_col1">CE</td>
-<td class="data row18 col2" id="T_bb2f5_row18_col2">55-65%</td>
-<td class="data row18 col3" id="T_bb2f5_row18_col3">59.700000</td>
-<td class="data row18 col4" id="T_bb2f5_row18_col4">-9.400000</td>
-<td class="data row18 col5" id="T_bb2f5_row18_col5">120,038</td>
-<td class="data row18 col6" id="T_bb2f5_row18_col6">23,379</td>
-<td class="data row18 col7" id="T_bb2f5_row18_col7">4,065</td>
-<td class="data row18 col8" id="T_bb2f5_row18_col8">900</td>
-<td class="data row18 col9" id="T_bb2f5_row18_col9">4,965</td>
+<th class="row_heading level0 row18" id="T_83ab8_level0_row18">19</th>
+<td class="data row18 col0" id="T_83ab8_row18_col0">SOBRAL</td>
+<td class="data row18 col1" id="T_83ab8_row18_col1">CE</td>
+<td class="data row18 col2" id="T_83ab8_row18_col2">55-65%</td>
+<td class="data row18 col3" id="T_83ab8_row18_col3">59.700000</td>
+<td class="data row18 col4" id="T_83ab8_row18_col4">-9.400000</td>
+<td class="data row18 col5" id="T_83ab8_row18_col5">120,038</td>
+<td class="data row18 col6" id="T_83ab8_row18_col6">23,379</td>
+<td class="data row18 col7" id="T_83ab8_row18_col7">4,065</td>
+<td class="data row18 col8" id="T_83ab8_row18_col8">900</td>
+<td class="data row18 col9" id="T_83ab8_row18_col9">4,965</td>
 </tr>
 <tr>
-<th class="row_heading level0 row19" id="T_bb2f5_level0_row19">20</th>
-<td class="data row19 col0" id="T_bb2f5_row19_col0">SÃO BERNARDO DO CAMPO</td>
-<td class="data row19 col1" id="T_bb2f5_row19_col1">SP</td>
-<td class="data row19 col2" id="T_bb2f5_row19_col2">45-55%</td>
-<td class="data row19 col3" id="T_bb2f5_row19_col3">46.800000</td>
-<td class="data row19 col4" id="T_bb2f5_row19_col4">-7.100000</td>
-<td class="data row19 col5" id="T_bb2f5_row19_col5">460,151</td>
-<td class="data row19 col6" id="T_bb2f5_row19_col6">136,501</td>
-<td class="data row19 col7" id="T_bb2f5_row19_col7">4,940</td>
-<td class="data row19 col8" id="T_bb2f5_row19_col8">0</td>
-<td class="data row19 col9" id="T_bb2f5_row19_col9">4,940</td>
+<th class="row_heading level0 row19" id="T_83ab8_level0_row19">20</th>
+<td class="data row19 col0" id="T_83ab8_row19_col0">SÃO BERNARDO DO CAMPO</td>
+<td class="data row19 col1" id="T_83ab8_row19_col1">SP</td>
+<td class="data row19 col2" id="T_83ab8_row19_col2">45-55%</td>
+<td class="data row19 col3" id="T_83ab8_row19_col3">46.800000</td>
+<td class="data row19 col4" id="T_83ab8_row19_col4">-7.100000</td>
+<td class="data row19 col5" id="T_83ab8_row19_col5">460,151</td>
+<td class="data row19 col6" id="T_83ab8_row19_col6">136,501</td>
+<td class="data row19 col7" id="T_83ab8_row19_col7">4,940</td>
+<td class="data row19 col8" id="T_83ab8_row19_col8">0</td>
+<td class="data row19 col9" id="T_83ab8_row19_col9">4,940</td>
 </tr>
 <tr>
-<th class="row_heading level0 row20" id="T_bb2f5_level0_row20">21</th>
-<td class="data row20 col0" id="T_bb2f5_row20_col0">CATALÃO</td>
-<td class="data row20 col1" id="T_bb2f5_row20_col1">GO</td>
-<td class="data row20 col2" id="T_bb2f5_row20_col2">35-45%</td>
-<td class="data row20 col3" id="T_bb2f5_row20_col3">36.200000</td>
-<td class="data row20 col4" id="T_bb2f5_row20_col4">-13.800000</td>
-<td class="data row20 col5" id="T_bb2f5_row20_col5">56,341</td>
-<td class="data row20 col6" id="T_bb2f5_row20_col6">16,708</td>
-<td class="data row20 col7" id="T_bb2f5_row20_col7">4,386</td>
-<td class="data row20 col8" id="T_bb2f5_row20_col8">365</td>
-<td class="data row20 col9" id="T_bb2f5_row20_col9">4,751</td>
+<th class="row_heading level0 row20" id="T_83ab8_level0_row20">21</th>
+<td class="data row20 col0" id="T_83ab8_row20_col0">CATALÃO</td>
+<td class="data row20 col1" id="T_83ab8_row20_col1">GO</td>
+<td class="data row20 col2" id="T_83ab8_row20_col2">35-45%</td>
+<td class="data row20 col3" id="T_83ab8_row20_col3">36.200000</td>
+<td class="data row20 col4" id="T_83ab8_row20_col4">-13.800000</td>
+<td class="data row20 col5" id="T_83ab8_row20_col5">56,341</td>
+<td class="data row20 col6" id="T_83ab8_row20_col6">16,708</td>
+<td class="data row20 col7" id="T_83ab8_row20_col7">4,386</td>
+<td class="data row20 col8" id="T_83ab8_row20_col8">365</td>
+<td class="data row20 col9" id="T_83ab8_row20_col9">4,751</td>
 </tr>
 <tr>
-<th class="row_heading level0 row21" id="T_bb2f5_level0_row21">22</th>
-<td class="data row21 col0" id="T_bb2f5_row21_col0">BARUERI</td>
-<td class="data row21 col1" id="T_bb2f5_row21_col1">SP</td>
-<td class="data row21 col2" id="T_bb2f5_row21_col2">35-45%</td>
-<td class="data row21 col3" id="T_bb2f5_row21_col3">40.800000</td>
-<td class="data row21 col4" id="T_bb2f5_row21_col4">-7.500000</td>
-<td class="data row21 col5" id="T_bb2f5_row21_col5">219,094</td>
-<td class="data row21 col6" id="T_bb2f5_row21_col6">67,090</td>
-<td class="data row21 col7" id="T_bb2f5_row21_col7">3,241</td>
-<td class="data row21 col8" id="T_bb2f5_row21_col8">1,442</td>
-<td class="data row21 col9" id="T_bb2f5_row21_col9">4,683</td>
+<th class="row_heading level0 row21" id="T_83ab8_level0_row21">22</th>
+<td class="data row21 col0" id="T_83ab8_row21_col0">BARUERI</td>
+<td class="data row21 col1" id="T_83ab8_row21_col1">SP</td>
+<td class="data row21 col2" id="T_83ab8_row21_col2">35-45%</td>
+<td class="data row21 col3" id="T_83ab8_row21_col3">40.800000</td>
+<td class="data row21 col4" id="T_83ab8_row21_col4">-7.500000</td>
+<td class="data row21 col5" id="T_83ab8_row21_col5">219,094</td>
+<td class="data row21 col6" id="T_83ab8_row21_col6">67,090</td>
+<td class="data row21 col7" id="T_83ab8_row21_col7">3,241</td>
+<td class="data row21 col8" id="T_83ab8_row21_col8">1,442</td>
+<td class="data row21 col9" id="T_83ab8_row21_col9">4,683</td>
 </tr>
 <tr>
-<th class="row_heading level0 row22" id="T_bb2f5_level0_row22">23</th>
-<td class="data row22 col0" id="T_bb2f5_row22_col0">TABOÃO DA SERRA</td>
-<td class="data row22 col1" id="T_bb2f5_row22_col1">SP</td>
-<td class="data row22 col2" id="T_bb2f5_row22_col2">45-55%</td>
-<td class="data row22 col3" id="T_bb2f5_row22_col3">49.600000</td>
-<td class="data row22 col4" id="T_bb2f5_row22_col4">-8.800000</td>
-<td class="data row22 col5" id="T_bb2f5_row22_col5">160,051</td>
-<td class="data row22 col6" id="T_bb2f5_row22_col6">41,485</td>
-<td class="data row22 col7" id="T_bb2f5_row22_col7">4,514</td>
-<td class="data row22 col8" id="T_bb2f5_row22_col8">0</td>
-<td class="data row22 col9" id="T_bb2f5_row22_col9">4,514</td>
+<th class="row_heading level0 row22" id="T_83ab8_level0_row22">23</th>
+<td class="data row22 col0" id="T_83ab8_row22_col0">TABOÃO DA SERRA</td>
+<td class="data row22 col1" id="T_83ab8_row22_col1">SP</td>
+<td class="data row22 col2" id="T_83ab8_row22_col2">45-55%</td>
+<td class="data row22 col3" id="T_83ab8_row22_col3">49.600000</td>
+<td class="data row22 col4" id="T_83ab8_row22_col4">-8.800000</td>
+<td class="data row22 col5" id="T_83ab8_row22_col5">160,051</td>
+<td class="data row22 col6" id="T_83ab8_row22_col6">41,485</td>
+<td class="data row22 col7" id="T_83ab8_row22_col7">4,514</td>
+<td class="data row22 col8" id="T_83ab8_row22_col8">0</td>
+<td class="data row22 col9" id="T_83ab8_row22_col9">4,514</td>
 </tr>
 <tr>
-<th class="row_heading level0 row23" id="T_bb2f5_level0_row23">24</th>
-<td class="data row23 col0" id="T_bb2f5_row23_col0">BALSAS</td>
-<td class="data row23 col1" id="T_bb2f5_row23_col1">MA</td>
-<td class="data row23 col2" id="T_bb2f5_row23_col2">35-45%</td>
-<td class="data row23 col3" id="T_bb2f5_row23_col3">38.400000</td>
-<td class="data row23 col4" id="T_bb2f5_row23_col4">-13.400000</td>
-<td class="data row23 col5" id="T_bb2f5_row23_col5">55,383</td>
-<td class="data row23 col6" id="T_bb2f5_row23_col6">14,327</td>
-<td class="data row23 col7" id="T_bb2f5_row23_col7">4,122</td>
-<td class="data row23 col8" id="T_bb2f5_row23_col8">345</td>
-<td class="data row23 col9" id="T_bb2f5_row23_col9">4,466</td>
+<th class="row_heading level0 row23" id="T_83ab8_level0_row23">24</th>
+<td class="data row23 col0" id="T_83ab8_row23_col0">BALSAS</td>
+<td class="data row23 col1" id="T_83ab8_row23_col1">MA</td>
+<td class="data row23 col2" id="T_83ab8_row23_col2">35-45%</td>
+<td class="data row23 col3" id="T_83ab8_row23_col3">38.400000</td>
+<td class="data row23 col4" id="T_83ab8_row23_col4">-13.400000</td>
+<td class="data row23 col5" id="T_83ab8_row23_col5">55,383</td>
+<td class="data row23 col6" id="T_83ab8_row23_col6">14,327</td>
+<td class="data row23 col7" id="T_83ab8_row23_col7">4,122</td>
+<td class="data row23 col8" id="T_83ab8_row23_col8">345</td>
+<td class="data row23 col9" id="T_83ab8_row23_col9">4,466</td>
 </tr>
 <tr>
-<th class="row_heading level0 row24" id="T_bb2f5_level0_row24">25</th>
-<td class="data row24 col0" id="T_bb2f5_row24_col0">PETROLINA</td>
-<td class="data row24 col1" id="T_bb2f5_row24_col1">PE</td>
-<td class="data row24 col2" id="T_bb2f5_row24_col2">55-65%</td>
-<td class="data row24 col3" id="T_bb2f5_row24_col3">60.200000</td>
-<td class="data row24 col4" id="T_bb2f5_row24_col4">-7.400000</td>
-<td class="data row24 col5" id="T_bb2f5_row24_col5">193,929</td>
-<td class="data row24 col6" id="T_bb2f5_row24_col6">45,231</td>
-<td class="data row24 col7" id="T_bb2f5_row24_col7">2,828</td>
-<td class="data row24 col8" id="T_bb2f5_row24_col8">1,465</td>
-<td class="data row24 col9" id="T_bb2f5_row24_col9">4,293</td>
+<th class="row_heading level0 row24" id="T_83ab8_level0_row24">25</th>
+<td class="data row24 col0" id="T_83ab8_row24_col0">PETROLINA</td>
+<td class="data row24 col1" id="T_83ab8_row24_col1">PE</td>
+<td class="data row24 col2" id="T_83ab8_row24_col2">55-65%</td>
+<td class="data row24 col3" id="T_83ab8_row24_col3">60.200000</td>
+<td class="data row24 col4" id="T_83ab8_row24_col4">-7.400000</td>
+<td class="data row24 col5" id="T_83ab8_row24_col5">193,929</td>
+<td class="data row24 col6" id="T_83ab8_row24_col6">45,231</td>
+<td class="data row24 col7" id="T_83ab8_row24_col7">2,828</td>
+<td class="data row24 col8" id="T_83ab8_row24_col8">1,465</td>
+<td class="data row24 col9" id="T_83ab8_row24_col9">4,293</td>
 </tr>
 <tr>
-<th class="row_heading level0 row25" id="T_bb2f5_level0_row25">26</th>
-<td class="data row25 col0" id="T_bb2f5_row25_col0">CAMPINAS</td>
-<td class="data row25 col1" id="T_bb2f5_row25_col1">SP</td>
-<td class="data row25 col2" id="T_bb2f5_row25_col2">35-45%</td>
-<td class="data row25 col3" id="T_bb2f5_row25_col3">38.200000</td>
-<td class="data row25 col4" id="T_bb2f5_row25_col4">-5.600000</td>
-<td class="data row25 col5" id="T_bb2f5_row25_col5">633,220</td>
-<td class="data row25 col6" id="T_bb2f5_row25_col6">205,914</td>
-<td class="data row25 col7" id="T_bb2f5_row25_col7">0</td>
-<td class="data row25 col8" id="T_bb2f5_row25_col8">4,228</td>
-<td class="data row25 col9" id="T_bb2f5_row25_col9">4,228</td>
+<th class="row_heading level0 row25" id="T_83ab8_level0_row25">26</th>
+<td class="data row25 col0" id="T_83ab8_row25_col0">CAMPINAS</td>
+<td class="data row25 col1" id="T_83ab8_row25_col1">SP</td>
+<td class="data row25 col2" id="T_83ab8_row25_col2">35-45%</td>
+<td class="data row25 col3" id="T_83ab8_row25_col3">38.200000</td>
+<td class="data row25 col4" id="T_83ab8_row25_col4">-5.600000</td>
+<td class="data row25 col5" id="T_83ab8_row25_col5">633,220</td>
+<td class="data row25 col6" id="T_83ab8_row25_col6">205,914</td>
+<td class="data row25 col7" id="T_83ab8_row25_col7">0</td>
+<td class="data row25 col8" id="T_83ab8_row25_col8">4,228</td>
+<td class="data row25 col9" id="T_83ab8_row25_col9">4,228</td>
 </tr>
 <tr>
-<th class="row_heading level0 row26" id="T_bb2f5_level0_row26">27</th>
-<td class="data row26 col0" id="T_bb2f5_row26_col0">TRINDADE</td>
-<td class="data row26 col1" id="T_bb2f5_row26_col1">GO</td>
-<td class="data row26 col2" id="T_bb2f5_row26_col2">&lt;35%</td>
-<td class="data row26 col3" id="T_bb2f5_row26_col3">31.300000</td>
-<td class="data row26 col4" id="T_bb2f5_row26_col4">-11.700000</td>
-<td class="data row26 col5" id="T_bb2f5_row26_col5">72,155</td>
-<td class="data row26 col6" id="T_bb2f5_row26_col6">21,029</td>
-<td class="data row26 col7" id="T_bb2f5_row26_col7">4,093</td>
-<td class="data row26 col8" id="T_bb2f5_row26_col8">0</td>
-<td class="data row26 col9" id="T_bb2f5_row26_col9">4,093</td>
+<th class="row_heading level0 row26" id="T_83ab8_level0_row26">27</th>
+<td class="data row26 col0" id="T_83ab8_row26_col0">TRINDADE</td>
+<td class="data row26 col1" id="T_83ab8_row26_col1">GO</td>
+<td class="data row26 col2" id="T_83ab8_row26_col2">&lt;35%</td>
+<td class="data row26 col3" id="T_83ab8_row26_col3">31.300000</td>
+<td class="data row26 col4" id="T_83ab8_row26_col4">-11.700000</td>
+<td class="data row26 col5" id="T_83ab8_row26_col5">72,155</td>
+<td class="data row26 col6" id="T_83ab8_row26_col6">21,029</td>
+<td class="data row26 col7" id="T_83ab8_row26_col7">4,093</td>
+<td class="data row26 col8" id="T_83ab8_row26_col8">0</td>
+<td class="data row26 col9" id="T_83ab8_row26_col9">4,093</td>
 </tr>
 <tr>
-<th class="row_heading level0 row27" id="T_bb2f5_level0_row27">28</th>
-<td class="data row27 col0" id="T_bb2f5_row27_col0">DIADEMA</td>
-<td class="data row27 col1" id="T_bb2f5_row27_col1">SP</td>
-<td class="data row27 col2" id="T_bb2f5_row27_col2">45-55%</td>
-<td class="data row27 col3" id="T_bb2f5_row27_col3">52.400000</td>
-<td class="data row27 col4" id="T_bb2f5_row27_col4">-7.600000</td>
-<td class="data row27 col5" id="T_bb2f5_row27_col5">239,565</td>
-<td class="data row27 col6" id="T_bb2f5_row27_col6">74,857</td>
-<td class="data row27 col7" id="T_bb2f5_row27_col7">3,866</td>
-<td class="data row27 col8" id="T_bb2f5_row27_col8">0</td>
-<td class="data row27 col9" id="T_bb2f5_row27_col9">3,866</td>
+<th class="row_heading level0 row27" id="T_83ab8_level0_row27">28</th>
+<td class="data row27 col0" id="T_83ab8_row27_col0">DIADEMA</td>
+<td class="data row27 col1" id="T_83ab8_row27_col1">SP</td>
+<td class="data row27 col2" id="T_83ab8_row27_col2">45-55%</td>
+<td class="data row27 col3" id="T_83ab8_row27_col3">52.400000</td>
+<td class="data row27 col4" id="T_83ab8_row27_col4">-7.600000</td>
+<td class="data row27 col5" id="T_83ab8_row27_col5">239,565</td>
+<td class="data row27 col6" id="T_83ab8_row27_col6">74,857</td>
+<td class="data row27 col7" id="T_83ab8_row27_col7">3,866</td>
+<td class="data row27 col8" id="T_83ab8_row27_col8">0</td>
+<td class="data row27 col9" id="T_83ab8_row27_col9">3,866</td>
 </tr>
 <tr>
-<th class="row_heading level0 row28" id="T_bb2f5_level0_row28">29</th>
-<td class="data row28 col0" id="T_bb2f5_row28_col0">GUARAPUAVA</td>
-<td class="data row28 col1" id="T_bb2f5_row28_col1">PR</td>
-<td class="data row28 col2" id="T_bb2f5_row28_col2">35-45%</td>
-<td class="data row28 col3" id="T_bb2f5_row28_col3">36.900000</td>
-<td class="data row28 col4" id="T_bb2f5_row28_col4">-8.900000</td>
-<td class="data row28 col5" id="T_bb2f5_row28_col5">103,362</td>
-<td class="data row28 col6" id="T_bb2f5_row28_col6">26,167</td>
-<td class="data row28 col7" id="T_bb2f5_row28_col7">3,025</td>
-<td class="data row28 col8" id="T_bb2f5_row28_col8">648</td>
-<td class="data row28 col9" id="T_bb2f5_row28_col9">3,673</td>
+<th class="row_heading level0 row28" id="T_83ab8_level0_row28">29</th>
+<td class="data row28 col0" id="T_83ab8_row28_col0">GUARAPUAVA</td>
+<td class="data row28 col1" id="T_83ab8_row28_col1">PR</td>
+<td class="data row28 col2" id="T_83ab8_row28_col2">35-45%</td>
+<td class="data row28 col3" id="T_83ab8_row28_col3">36.900000</td>
+<td class="data row28 col4" id="T_83ab8_row28_col4">-8.900000</td>
+<td class="data row28 col5" id="T_83ab8_row28_col5">103,362</td>
+<td class="data row28 col6" id="T_83ab8_row28_col6">26,167</td>
+<td class="data row28 col7" id="T_83ab8_row28_col7">3,025</td>
+<td class="data row28 col8" id="T_83ab8_row28_col8">648</td>
+<td class="data row28 col9" id="T_83ab8_row28_col9">3,673</td>
 </tr>
 <tr>
-<th class="row_heading level0 row29" id="T_bb2f5_level0_row29">30</th>
-<td class="data row29 col0" id="T_bb2f5_row29_col0">UBERABA</td>
-<td class="data row29 col1" id="T_bb2f5_row29_col1">MG</td>
-<td class="data row29 col2" id="T_bb2f5_row29_col2">35-45%</td>
-<td class="data row29 col3" id="T_bb2f5_row29_col3">38.600000</td>
-<td class="data row29 col4" id="T_bb2f5_row29_col4">-7.300000</td>
-<td class="data row29 col5" id="T_bb2f5_row29_col5">178,245</td>
-<td class="data row29 col6" id="T_bb2f5_row29_col6">50,783</td>
-<td class="data row29 col7" id="T_bb2f5_row29_col7">2,408</td>
-<td class="data row29 col8" id="T_bb2f5_row29_col8">1,146</td>
-<td class="data row29 col9" id="T_bb2f5_row29_col9">3,554</td>
+<th class="row_heading level0 row29" id="T_83ab8_level0_row29">30</th>
+<td class="data row29 col0" id="T_83ab8_row29_col0">UBERABA</td>
+<td class="data row29 col1" id="T_83ab8_row29_col1">MG</td>
+<td class="data row29 col2" id="T_83ab8_row29_col2">35-45%</td>
+<td class="data row29 col3" id="T_83ab8_row29_col3">38.600000</td>
+<td class="data row29 col4" id="T_83ab8_row29_col4">-7.300000</td>
+<td class="data row29 col5" id="T_83ab8_row29_col5">178,245</td>
+<td class="data row29 col6" id="T_83ab8_row29_col6">50,783</td>
+<td class="data row29 col7" id="T_83ab8_row29_col7">2,408</td>
+<td class="data row29 col8" id="T_83ab8_row29_col8">1,146</td>
+<td class="data row29 col9" id="T_83ab8_row29_col9">3,554</td>
 </tr>
 <tr>
-<th class="row_heading level0 row30" id="T_bb2f5_level0_row30">31</th>
-<td class="data row30 col0" id="T_bb2f5_row30_col0">ITAPEVI</td>
-<td class="data row30 col1" id="T_bb2f5_row30_col1">SP</td>
-<td class="data row30 col2" id="T_bb2f5_row30_col2">45-55%</td>
-<td class="data row30 col3" id="T_bb2f5_row30_col3">47.200000</td>
-<td class="data row30 col4" id="T_bb2f5_row30_col4">-9.000000</td>
-<td class="data row30 col5" id="T_bb2f5_row30_col5">118,929</td>
-<td class="data row30 col6" id="T_bb2f5_row30_col6">41,159</td>
-<td class="data row30 col7" id="T_bb2f5_row30_col7">3,554</td>
-<td class="data row30 col8" id="T_bb2f5_row30_col8">0</td>
-<td class="data row30 col9" id="T_bb2f5_row30_col9">3,554</td>
+<th class="row_heading level0 row30" id="T_83ab8_level0_row30">31</th>
+<td class="data row30 col0" id="T_83ab8_row30_col0">ITAPEVI</td>
+<td class="data row30 col1" id="T_83ab8_row30_col1">SP</td>
+<td class="data row30 col2" id="T_83ab8_row30_col2">45-55%</td>
+<td class="data row30 col3" id="T_83ab8_row30_col3">47.200000</td>
+<td class="data row30 col4" id="T_83ab8_row30_col4">-9.000000</td>
+<td class="data row30 col5" id="T_83ab8_row30_col5">118,929</td>
+<td class="data row30 col6" id="T_83ab8_row30_col6">41,159</td>
+<td class="data row30 col7" id="T_83ab8_row30_col7">3,554</td>
+<td class="data row30 col8" id="T_83ab8_row30_col8">0</td>
+<td class="data row30 col9" id="T_83ab8_row30_col9">3,554</td>
 </tr>
 <tr>
-<th class="row_heading level0 row31" id="T_bb2f5_level0_row31">32</th>
-<td class="data row31 col0" id="T_bb2f5_row31_col0">SENADOR CANEDO</td>
-<td class="data row31 col1" id="T_bb2f5_row31_col1">GO</td>
-<td class="data row31 col2" id="T_bb2f5_row31_col2">&lt;35%</td>
-<td class="data row31 col3" id="T_bb2f5_row31_col3">34.100000</td>
-<td class="data row31 col4" id="T_bb2f5_row31_col4">-10.900000</td>
-<td class="data row31 col5" id="T_bb2f5_row31_col5">72,040</td>
-<td class="data row31 col6" id="T_bb2f5_row31_col6">20,347</td>
-<td class="data row31 col7" id="T_bb2f5_row31_col7">3,554</td>
-<td class="data row31 col8" id="T_bb2f5_row31_col8">0</td>
-<td class="data row31 col9" id="T_bb2f5_row31_col9">3,554</td>
+<th class="row_heading level0 row31" id="T_83ab8_level0_row31">32</th>
+<td class="data row31 col0" id="T_83ab8_row31_col0">SENADOR CANEDO</td>
+<td class="data row31 col1" id="T_83ab8_row31_col1">GO</td>
+<td class="data row31 col2" id="T_83ab8_row31_col2">&lt;35%</td>
+<td class="data row31 col3" id="T_83ab8_row31_col3">34.100000</td>
+<td class="data row31 col4" id="T_83ab8_row31_col4">-10.900000</td>
+<td class="data row31 col5" id="T_83ab8_row31_col5">72,040</td>
+<td class="data row31 col6" id="T_83ab8_row31_col6">20,347</td>
+<td class="data row31 col7" id="T_83ab8_row31_col7">3,554</td>
+<td class="data row31 col8" id="T_83ab8_row31_col8">0</td>
+<td class="data row31 col9" id="T_83ab8_row31_col9">3,554</td>
 </tr>
 <tr>
-<th class="row_heading level0 row32" id="T_bb2f5_level0_row32">33</th>
-<td class="data row32 col0" id="T_bb2f5_row32_col0">ITUMBIARA</td>
-<td class="data row32 col1" id="T_bb2f5_row32_col1">GO</td>
-<td class="data row32 col2" id="T_bb2f5_row32_col2">&lt;35%</td>
-<td class="data row32 col3" id="T_bb2f5_row32_col3">28.600000</td>
-<td class="data row32 col4" id="T_bb2f5_row32_col4">-12.400000</td>
-<td class="data row32 col5" id="T_bb2f5_row32_col5">54,976</td>
-<td class="data row32 col6" id="T_bb2f5_row32_col6">17,542</td>
-<td class="data row32 col7" id="T_bb2f5_row32_col7">3,514</td>
-<td class="data row32 col8" id="T_bb2f5_row32_col8">0</td>
-<td class="data row32 col9" id="T_bb2f5_row32_col9">3,514</td>
+<th class="row_heading level0 row32" id="T_83ab8_level0_row32">33</th>
+<td class="data row32 col0" id="T_83ab8_row32_col0">ITUMBIARA</td>
+<td class="data row32 col1" id="T_83ab8_row32_col1">GO</td>
+<td class="data row32 col2" id="T_83ab8_row32_col2">&lt;35%</td>
+<td class="data row32 col3" id="T_83ab8_row32_col3">28.600000</td>
+<td class="data row32 col4" id="T_83ab8_row32_col4">-12.400000</td>
+<td class="data row32 col5" id="T_83ab8_row32_col5">54,976</td>
+<td class="data row32 col6" id="T_83ab8_row32_col6">17,542</td>
+<td class="data row32 col7" id="T_83ab8_row32_col7">3,514</td>
+<td class="data row32 col8" id="T_83ab8_row32_col8">0</td>
+<td class="data row32 col9" id="T_83ab8_row32_col9">3,514</td>
 </tr>
 <tr>
-<th class="row_heading level0 row33" id="T_bb2f5_level0_row33">34</th>
-<td class="data row33 col0" id="T_bb2f5_row33_col0">TERESINA</td>
-<td class="data row33 col1" id="T_bb2f5_row33_col1">PI</td>
-<td class="data row33 col2" id="T_bb2f5_row33_col2">55-65%</td>
-<td class="data row33 col3" id="T_bb2f5_row33_col3">61.200000</td>
-<td class="data row33 col4" id="T_bb2f5_row33_col4">-5.300000</td>
-<td class="data row33 col5" id="T_bb2f5_row33_col5">484,190</td>
-<td class="data row33 col6" id="T_bb2f5_row33_col6">88,646</td>
-<td class="data row33 col7" id="T_bb2f5_row33_col7">0</td>
-<td class="data row33 col8" id="T_bb2f5_row33_col8">3,487</td>
-<td class="data row33 col9" id="T_bb2f5_row33_col9">3,487</td>
+<th class="row_heading level0 row33" id="T_83ab8_level0_row33">34</th>
+<td class="data row33 col0" id="T_83ab8_row33_col0">TERESINA</td>
+<td class="data row33 col1" id="T_83ab8_row33_col1">PI</td>
+<td class="data row33 col2" id="T_83ab8_row33_col2">55-65%</td>
+<td class="data row33 col3" id="T_83ab8_row33_col3">61.200000</td>
+<td class="data row33 col4" id="T_83ab8_row33_col4">-5.300000</td>
+<td class="data row33 col5" id="T_83ab8_row33_col5">484,190</td>
+<td class="data row33 col6" id="T_83ab8_row33_col6">88,646</td>
+<td class="data row33 col7" id="T_83ab8_row33_col7">0</td>
+<td class="data row33 col8" id="T_83ab8_row33_col8">3,487</td>
+<td class="data row33 col9" id="T_83ab8_row33_col9">3,487</td>
 </tr>
 <tr>
-<th class="row_heading level0 row34" id="T_bb2f5_level0_row34">35</th>
-<td class="data row34 col0" id="T_bb2f5_row34_col0">CONSELHEIRO LAFAIETE</td>
-<td class="data row34 col1" id="T_bb2f5_row34_col1">MG</td>
-<td class="data row34 col2" id="T_bb2f5_row34_col2">45-55%</td>
-<td class="data row34 col3" id="T_bb2f5_row34_col3">46.300000</td>
-<td class="data row34 col4" id="T_bb2f5_row34_col4">-10.700000</td>
-<td class="data row34 col5" id="T_bb2f5_row34_col5">73,456</td>
-<td class="data row34 col6" id="T_bb2f5_row34_col6">15,595</td>
-<td class="data row34 col7" id="T_bb2f5_row34_col7">3,484</td>
-<td class="data row34 col8" id="T_bb2f5_row34_col8">0</td>
-<td class="data row34 col9" id="T_bb2f5_row34_col9">3,484</td>
+<th class="row_heading level0 row34" id="T_83ab8_level0_row34">35</th>
+<td class="data row34 col0" id="T_83ab8_row34_col0">CONSELHEIRO LAFAIETE</td>
+<td class="data row34 col1" id="T_83ab8_row34_col1">MG</td>
+<td class="data row34 col2" id="T_83ab8_row34_col2">45-55%</td>
+<td class="data row34 col3" id="T_83ab8_row34_col3">46.300000</td>
+<td class="data row34 col4" id="T_83ab8_row34_col4">-10.700000</td>
+<td class="data row34 col5" id="T_83ab8_row34_col5">73,456</td>
+<td class="data row34 col6" id="T_83ab8_row34_col6">15,595</td>
+<td class="data row34 col7" id="T_83ab8_row34_col7">3,484</td>
+<td class="data row34 col8" id="T_83ab8_row34_col8">0</td>
+<td class="data row34 col9" id="T_83ab8_row34_col9">3,484</td>
 </tr>
 <tr>
-<th class="row_heading level0 row35" id="T_bb2f5_level0_row35">36</th>
-<td class="data row35 col0" id="T_bb2f5_row35_col0">TAILÂNDIA</td>
-<td class="data row35 col1" id="T_bb2f5_row35_col1">PA</td>
-<td class="data row35 col2" id="T_bb2f5_row35_col2">35-45%</td>
-<td class="data row35 col3" id="T_bb2f5_row35_col3">39.900000</td>
-<td class="data row35 col4" id="T_bb2f5_row35_col4">-13.600000</td>
-<td class="data row35 col5" id="T_bb2f5_row35_col5">41,873</td>
-<td class="data row35 col6" id="T_bb2f5_row35_col6">11,703</td>
-<td class="data row35 col7" id="T_bb2f5_row35_col7">3,205</td>
-<td class="data row35 col8" id="T_bb2f5_row35_col8">269</td>
-<td class="data row35 col9" id="T_bb2f5_row35_col9">3,474</td>
+<th class="row_heading level0 row35" id="T_83ab8_level0_row35">36</th>
+<td class="data row35 col0" id="T_83ab8_row35_col0">TAILÂNDIA</td>
+<td class="data row35 col1" id="T_83ab8_row35_col1">PA</td>
+<td class="data row35 col2" id="T_83ab8_row35_col2">35-45%</td>
+<td class="data row35 col3" id="T_83ab8_row35_col3">39.900000</td>
+<td class="data row35 col4" id="T_83ab8_row35_col4">-13.600000</td>
+<td class="data row35 col5" id="T_83ab8_row35_col5">41,873</td>
+<td class="data row35 col6" id="T_83ab8_row35_col6">11,703</td>
+<td class="data row35 col7" id="T_83ab8_row35_col7">3,205</td>
+<td class="data row35 col8" id="T_83ab8_row35_col8">269</td>
+<td class="data row35 col9" id="T_83ab8_row35_col9">3,474</td>
 </tr>
 <tr>
-<th class="row_heading level0 row36" id="T_bb2f5_level0_row36">37</th>
-<td class="data row36 col0" id="T_bb2f5_row36_col0">ANÁPOLIS</td>
-<td class="data row36 col1" id="T_bb2f5_row36_col1">GO</td>
-<td class="data row36 col2" id="T_bb2f5_row36_col2">&lt;35%</td>
-<td class="data row36 col3" id="T_bb2f5_row36_col3">21.800000</td>
-<td class="data row36 col4" id="T_bb2f5_row36_col4">-7.600000</td>
-<td class="data row36 col5" id="T_bb2f5_row36_col5">215,471</td>
-<td class="data row36 col6" id="T_bb2f5_row36_col6">64,228</td>
-<td class="data row36 col7" id="T_bb2f5_row36_col7">3,429</td>
-<td class="data row36 col8" id="T_bb2f5_row36_col8">0</td>
-<td class="data row36 col9" id="T_bb2f5_row36_col9">3,429</td>
+<th class="row_heading level0 row36" id="T_83ab8_level0_row36">37</th>
+<td class="data row36 col0" id="T_83ab8_row36_col0">ANÁPOLIS</td>
+<td class="data row36 col1" id="T_83ab8_row36_col1">GO</td>
+<td class="data row36 col2" id="T_83ab8_row36_col2">&lt;35%</td>
+<td class="data row36 col3" id="T_83ab8_row36_col3">21.800000</td>
+<td class="data row36 col4" id="T_83ab8_row36_col4">-7.600000</td>
+<td class="data row36 col5" id="T_83ab8_row36_col5">215,471</td>
+<td class="data row36 col6" id="T_83ab8_row36_col6">64,228</td>
+<td class="data row36 col7" id="T_83ab8_row36_col7">3,429</td>
+<td class="data row36 col8" id="T_83ab8_row36_col8">0</td>
+<td class="data row36 col9" id="T_83ab8_row36_col9">3,429</td>
 </tr>
 <tr>
-<th class="row_heading level0 row37" id="T_bb2f5_level0_row37">38</th>
-<td class="data row37 col0" id="T_bb2f5_row37_col0">SANTANA DE PARNAÍBA</td>
-<td class="data row37 col1" id="T_bb2f5_row37_col1">SP</td>
-<td class="data row37 col2" id="T_bb2f5_row37_col2">35-45%</td>
-<td class="data row37 col3" id="T_bb2f5_row37_col3">35.800000</td>
-<td class="data row37 col4" id="T_bb2f5_row37_col4">-9.300000</td>
-<td class="data row37 col5" id="T_bb2f5_row37_col5">82,187</td>
-<td class="data row37 col6" id="T_bb2f5_row37_col6">25,222</td>
-<td class="data row37 col7" id="T_bb2f5_row37_col7">2,755</td>
-<td class="data row37 col8" id="T_bb2f5_row37_col8">540</td>
-<td class="data row37 col9" id="T_bb2f5_row37_col9">3,295</td>
+<th class="row_heading level0 row37" id="T_83ab8_level0_row37">38</th>
+<td class="data row37 col0" id="T_83ab8_row37_col0">SANTANA DE PARNAÍBA</td>
+<td class="data row37 col1" id="T_83ab8_row37_col1">SP</td>
+<td class="data row37 col2" id="T_83ab8_row37_col2">35-45%</td>
+<td class="data row37 col3" id="T_83ab8_row37_col3">35.800000</td>
+<td class="data row37 col4" id="T_83ab8_row37_col4">-9.300000</td>
+<td class="data row37 col5" id="T_83ab8_row37_col5">82,187</td>
+<td class="data row37 col6" id="T_83ab8_row37_col6">25,222</td>
+<td class="data row37 col7" id="T_83ab8_row37_col7">2,755</td>
+<td class="data row37 col8" id="T_83ab8_row37_col8">540</td>
+<td class="data row37 col9" id="T_83ab8_row37_col9">3,295</td>
 </tr>
 <tr>
-<th class="row_heading level0 row38" id="T_bb2f5_level0_row38">39</th>
-<td class="data row38 col0" id="T_bb2f5_row38_col0">EMBU DAS ARTES</td>
-<td class="data row38 col1" id="T_bb2f5_row38_col1">SP</td>
-<td class="data row38 col2" id="T_bb2f5_row38_col2">45-55%</td>
-<td class="data row38 col3" id="T_bb2f5_row38_col3">49.100000</td>
-<td class="data row38 col4" id="T_bb2f5_row38_col4">-8.200000</td>
-<td class="data row38 col5" id="T_bb2f5_row38_col5">150,338</td>
-<td class="data row38 col6" id="T_bb2f5_row38_col6">45,004</td>
-<td class="data row38 col7" id="T_bb2f5_row38_col7">3,263</td>
-<td class="data row38 col8" id="T_bb2f5_row38_col8">0</td>
-<td class="data row38 col9" id="T_bb2f5_row38_col9">3,263</td>
+<th class="row_heading level0 row38" id="T_83ab8_level0_row38">39</th>
+<td class="data row38 col0" id="T_83ab8_row38_col0">EMBU DAS ARTES</td>
+<td class="data row38 col1" id="T_83ab8_row38_col1">SP</td>
+<td class="data row38 col2" id="T_83ab8_row38_col2">45-55%</td>
+<td class="data row38 col3" id="T_83ab8_row38_col3">49.100000</td>
+<td class="data row38 col4" id="T_83ab8_row38_col4">-8.200000</td>
+<td class="data row38 col5" id="T_83ab8_row38_col5">150,338</td>
+<td class="data row38 col6" id="T_83ab8_row38_col6">45,004</td>
+<td class="data row38 col7" id="T_83ab8_row38_col7">3,263</td>
+<td class="data row38 col8" id="T_83ab8_row38_col8">0</td>
+<td class="data row38 col9" id="T_83ab8_row38_col9">3,263</td>
 </tr>
 <tr>
-<th class="row_heading level0 row39" id="T_bb2f5_level0_row39">40</th>
-<td class="data row39 col0" id="T_bb2f5_row39_col0">CAXIAS</td>
-<td class="data row39 col1" id="T_bb2f5_row39_col1">MA</td>
-<td class="data row39 col2" id="T_bb2f5_row39_col2">&gt;65%</td>
-<td class="data row39 col3" id="T_bb2f5_row39_col3">68.000000</td>
-<td class="data row39 col4" id="T_bb2f5_row39_col4">-9.200000</td>
-<td class="data row39 col5" id="T_bb2f5_row39_col5">86,605</td>
-<td class="data row39 col6" id="T_bb2f5_row39_col6">22,948</td>
-<td class="data row39 col7" id="T_bb2f5_row39_col7">2,749</td>
-<td class="data row39 col8" id="T_bb2f5_row39_col8">513</td>
-<td class="data row39 col9" id="T_bb2f5_row39_col9">3,262</td>
+<th class="row_heading level0 row39" id="T_83ab8_level0_row39">40</th>
+<td class="data row39 col0" id="T_83ab8_row39_col0">CAXIAS</td>
+<td class="data row39 col1" id="T_83ab8_row39_col1">MA</td>
+<td class="data row39 col2" id="T_83ab8_row39_col2">&gt;65%</td>
+<td class="data row39 col3" id="T_83ab8_row39_col3">68.000000</td>
+<td class="data row39 col4" id="T_83ab8_row39_col4">-9.200000</td>
+<td class="data row39 col5" id="T_83ab8_row39_col5">86,605</td>
+<td class="data row39 col6" id="T_83ab8_row39_col6">22,948</td>
+<td class="data row39 col7" id="T_83ab8_row39_col7">2,749</td>
+<td class="data row39 col8" id="T_83ab8_row39_col8">513</td>
+<td class="data row39 col9" id="T_83ab8_row39_col9">3,262</td>
 </tr>
 </tbody>
 </table>
@@ -10081,7 +10207,7 @@ O que concentrar evita é o PREJUÍZO — e esse é muito desigual:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=570fc67f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=35cd9432">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10094,7 +10220,7 @@ trazido de volta à urna vota 70% das vezes no adversário.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=eb1a3671">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=643c84ac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10218,7 +10344,7 @@ Somados, uma campanha de comparecimento de +1 pp neles custaria 287.267 votos l�
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f954398f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3d3896a9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10242,7 +10368,7 @@ bootstrap abaixo mostra a incerteza real.</li>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f800ba78">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2a89287c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10406,7 +10532,7 @@ bootstrap abaixo mostra a incerteza real.</li>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=15e90b1e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6d848758">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10434,7 +10560,7 @@ e são aplicadas a 2026 pela mesma régua.</li>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5eea89fd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=105e4005">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10563,7 +10689,7 @@ e são aplicadas a 2026 pela mesma régua.</li>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a9ecd957">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6e8f5f8a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10660,7 +10786,7 @@ e são aplicadas a 2026 pela mesma régua.</li>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c42286a6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=553a3b0d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10696,7 +10822,7 @@ contra 2,13 milhões reais). Esse viés passa para as projeções nacionais da s
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2ef77a2e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=97117b3e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10717,7 +10843,7 @@ da queda média nacional. Ele continua sendo um teto.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0693b23e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d769ace4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10824,7 +10950,7 @@ da queda média nacional. Ele continua sendo um teto.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=639afcea">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=abeaebf5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10980,7 +11106,7 @@ da queda média nacional. Ele continua sendo um teto.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=203720ce">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=be88249a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -11022,7 +11148,7 @@ Antes, com taxas fixas por faixa, cada município caía em 'rende' ou 'prejudica
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=08b7c2ed">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dd472734">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -11064,7 +11190,7 @@ apenas que, <strong>com o comportamento de 2022</strong>, nenhuma das 2.000 simu
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62f32b9d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1569b554">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -11105,7 +11231,7 @@ deixar explícito para o leitor que são estimativas de um modelo, não resultad
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b998eca3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2ed069f8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
